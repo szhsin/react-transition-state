@@ -90,5 +90,5 @@ export const useTransition = ({
 
   useEffect(() => () => clearTimeout(timeoutId.current), []);
 
-  return { state: STATES[state], transition, endTransition };
+  return [STATES[state], transition, endTransition];
 };
