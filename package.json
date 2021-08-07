@@ -1,14 +1,17 @@
 {
   "name": "react-transition-state",
   "version": "0.0.1",
-  "description": "",
-  "main": "src/index.js",
+  "description": "Manage react component state transition with ease.",
+  "author": "Zheng Song",
+  "license": "MIT",
+  "repository": "szhsin/react-transition-state",
+  "homepage": "https://szhsin.github.io/react-transition-state/",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
   "scripts": {
     "build": "rm -Rf dist && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Zheng Song",
-  "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
