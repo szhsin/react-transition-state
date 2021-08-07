@@ -8,6 +8,15 @@
   "homepage": "https://szhsin.github.io/react-transition-state/",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "transition",
+    "component",
+    "animation"
+  ],
   "scripts": {
     "build": "rm -Rf dist && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
