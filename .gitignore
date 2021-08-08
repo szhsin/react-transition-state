@@ -11,17 +11,17 @@ lerna-debug.log*
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+/coverage
 *.lcov
 
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+# production
+/build
 
 # Dependency directories
-node_modules/
+/node_modules
 
 # TypeScript cache
 *.tsbuildinfo
@@ -42,3 +42,6 @@ node_modules/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# misc
+.DS_Store
