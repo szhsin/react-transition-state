@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Manage react component state transition with ease.",
   "author": "Zheng Song",
   "license": "MIT",

@@ -104,7 +104,8 @@ var useTransition = function useTransition() {
       mountOnEnter = _ref.mountOnEnter,
       unmountOnExit = _ref.unmountOnExit,
       timeout = _ref.timeout,
-      preState = _ref.preState,
+      preEnter = _ref.preEnter,
+      preExit = _ref.preExit,
       _ref$enter = _ref.enter,
       enter = _ref$enter === void 0 ? true : _ref$enter,
       _ref$exit = _ref.exit,
@@ -165,26 +166,26 @@ var useTransition = function useTransition() {
         break;
     }
   }, [enterTimeout, exitTimeout, endTransition]);
-  var transition = react.useCallback(function (toEnter) {
+  var toggle = react.useCallback(function (toEnter) {
     var enterStage = latestState.current <= ENTERED;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
       if (!enterStage) {
-        transitState(enter ? preState ? PRE_ENTER : ENTERING : ENTERED);
+        transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
       }
     } else {
       if (enterStage) {
-        transitState(exit ? preState ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
+        transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [enter, exit, preState, unmountOnExit, transitState]);
+  }, [enter, exit, preEnter, preExit, unmountOnExit, transitState]);
   react.useEffect(function () {
     return function () {
       return clearTimeout(timeoutId.current);
     };
   }, []);
-  return [STATES[state], transition, endTransition];
+  return [STATES[state], toggle, endTransition];
 };
 
 exports.useTransition = useTransition;
