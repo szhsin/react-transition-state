@@ -64,6 +64,7 @@ code {
   transition: all 0.75s;
 }
 
+.basic-transition.preEnter,
 .basic-transition.exiting {
   opacity: 0;
   transform: scale(0.5);
@@ -71,9 +72,4 @@ code {
 
 .basic-transition.exited {
   display: none;
-}
-
-.basic-transition.preEnter {
-  opacity: 0;
-  transform: scale(0.5);
 }

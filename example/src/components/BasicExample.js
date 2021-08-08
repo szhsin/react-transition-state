@@ -6,7 +6,7 @@ function BasicExample() {
     const [state, toggle] = useTransition({
         timeout: 750,
         initialEntered: true,
-        preState: true,
+        preEnter: true,
         unmountOnExit
     });
 
