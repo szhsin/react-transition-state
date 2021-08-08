@@ -22,7 +22,8 @@ const useTransition = ({
   mountOnEnter,
   unmountOnExit,
   timeout,
-  preState,
+  preEnter,
+  preExit,
   enter = true,
   exit = true
 } = {}) => {
@@ -73,24 +74,24 @@ const useTransition = ({
     }
   }, [enterTimeout, exitTimeout, endTransition]);
 
-  const transition = useCallback(toEnter => {
+  const toggle = useCallback(toEnter => {
     const enterStage = latestState.current <= ENTERED;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
       if (!enterStage) {
-        transitState(enter ? (preState ? PRE_ENTER : ENTERING) : ENTERED);
+        transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
       }
     } else {
       if (enterStage) {
-        transitState(exit ? (preState ? PRE_EXIT : EXITING) : startOrEnd(unmountOnExit));
+        transitState(exit ? (preExit ? PRE_EXIT : EXITING) : startOrEnd(unmountOnExit));
       }
     }
-  }, [enter, exit, preState, unmountOnExit, transitState]);
+  }, [enter, exit, preEnter, preExit, unmountOnExit, transitState]);
 
   useEffect(() => () => clearTimeout(timeoutId.current), []);
 
-  return [STATES[state], transition, endTransition];
+  return [STATES[state], toggle, endTransition];
 };
 
 export { useTransition };

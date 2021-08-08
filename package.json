@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Manage react component state transition with ease.",
   "author": "Zheng Song",
   "license": "MIT",
@@ -18,8 +18,10 @@
     "animation"
   ],
   "scripts": {
+    "start": "rollup --config --watch",
     "build": "rm -Rf dist && rollup --config",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eg": "npm start --prefix example"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

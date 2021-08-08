@@ -19,6 +19,7 @@ export default [
     },
     {
         ...baseConfig,
+        watch: false,
         output: [
             {
                 file: 'dist/index.js',
