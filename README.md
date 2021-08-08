@@ -72,3 +72,14 @@ Name | Type | Default | Description
 `mountOnEnter` | boolean |  | State will be 'unmounted' until hit enter phase for the first time. It allows you to create lazily mounted component.
 `unmountOnExit` | boolean |  |  State will become 'unmounted' after 'exiting' finishes. It allows you to transition component out of DOM.
 `timeout` | number \| <br />{ enter?: number; exit?: number; } |  | Set timeout in **ms** for transitions; you can set a single value or different values for enter and exit transitions.
+
+#### Return value
+The `useTransition` Hook returns an array of values in the following order:
+1. state: 'preEnter' | 'entering' | 'entered' | 'preExit' | 'exiting' | 'exited' | 'unmounted'
+2. toggle: (toEnter?: boolean) => void
+  - If no parameter is supplied, this function will toggle state between enter and exit phases.
+  - You can set a boolean parameter to explicitly switch into one of the two phases.
+3. endTransition: () => void
+  - Call this function to stop transition which will turn state into 'entered' or 'exited'.
+  - You will normally call this function in the `onAnimationEnd` or `onTransitionEnd` event.
+  - You **must** either call this function explicitly in your code or set a timeout value in Hook options.
