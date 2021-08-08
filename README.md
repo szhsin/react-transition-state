@@ -51,3 +51,24 @@ export default Example;
   display: none;
 }
 ```
+
+## API
+### useTransition Hook
+```typescript
+function useTransition(options?: TransitionOptions): [
+  TransitionState,
+  (toEnter?: boolean) => void,
+  () => void
+];
+```
+#### TransitionOptions
+Name | Type | Default | Description
+------------ | ------------- | ------------- | -------------
+`enter` | boolean | true | Enable or disable enter phase transitions
+`exit` | boolean | true | Enable or disable exit phase transitions
+`preEnter` | boolean |  | Add a 'preEnter' state immediately before 'entering'
+`preExit` | boolean |  | Add a 'preExit' state immediately before 'exiting'
+`initialEntered` | boolean |  | Begining from 'entered' state
+`mountOnEnter` | boolean |  | State will be 'unmounted' until hit enter phase for the first time. It allows you to create lazily mounted component.
+`unmountOnExit` | boolean |  |  State will become 'unmounted' after 'exiting' finishes. It allows you to transition component out of DOM.
+`timeout` | number \| <br />{ enter?: number; exit?: number; } |  | Set timeout in **ms** for transitions; you can set a single value or different values for enter and exit transitions.
