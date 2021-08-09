@@ -1,3 +1,31 @@
 .App {
   text-align: center;
 }
+
+.github {
+  display: block;
+  position: fixed;
+  width: 10rem;
+  height: 10rem;
+  top: -5rem;
+  right: -5rem;
+  background-color: white;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 480px) {
+  .github {
+    width: 8rem;
+    height: 8rem;
+    top: -4rem;
+    right: -4rem;
+  }
+}
+
+.github img {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 30%;
+}
