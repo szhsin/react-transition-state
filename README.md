@@ -52,9 +52,10 @@ export default Example;
   display: none;
 }
 ```
+**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-basic-100io)**
 
 ## API
-### useTransition Hook
+### `useTransition` Hook
 ```typescript
 function useTransition(options?: TransitionOptions): [
   TransitionState,
@@ -62,7 +63,7 @@ function useTransition(options?: TransitionOptions): [
   () => void
 ];
 ```
-#### TransitionOptions
+#### Options
 Name | Type | Default | Description
 ------------ | ------------- | ------------- | -------------
 `enter` | boolean | true | Enable or disable enter phase transitions
