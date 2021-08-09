@@ -4,11 +4,12 @@
 
 ## Why?
 
-This tiny library was inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group). It allows you to easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner:
-- Works with both CSS animation and transition.
-- NO [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
-- Efficient: each state transition results in at most one extract render for your component.
-- Tiny in size: ideal for both component libraries and applications.
+This library was inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group). It allows you to easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner:
+- 🍭 Working with both CSS animation and transition.
+- 🔄 Moving React components in and out of DOM seamlessly.
+- 🚫 Using no [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
+- 🚀 Efficient: each state transition results in at most one extract render for your component.
+- 🤏 Tiny in size: ideal for both component libraries and applications.
 
 ## Install
 
