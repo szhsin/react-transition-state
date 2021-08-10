@@ -26,7 +26,7 @@ yarn add react-transition-state
 import { useTransition } from 'react-transition-state';
 
 function Example() {
-  const [state, toggle] = useTransition({ timeout: 750, preState: true });
+  const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   return (
     <div>
       <button onClick={() => toggle()}>toggle</button>
