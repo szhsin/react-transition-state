@@ -14,6 +14,7 @@ tmpdir="$HOME/gh-pages"
 rm -Rf "$tmpdir"
 mkdir "$tmpdir"
 mv build "$tmpdir"
+cd ..
 
 git checkout gh-pages
 check_str=$(git branch | grep "*" | grep "gh-pages")
@@ -22,8 +23,9 @@ if [ -z "$check_str" ]; then
     exit 1
 fi
 
-cp -Rf "$tmpdir/build/" ../
-git add ..
+rm -Rf static
+cp -Rf "$tmpdir/build/" .
+git add .
 git commit -m "Updates"
 git push
 rm -Rf "$tmpdir"
