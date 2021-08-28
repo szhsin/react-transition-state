@@ -1,5 +1,11 @@
-export type TransitionState = 'preEnter' | 'entering' | 'entered'
-  | 'preExit' | 'exiting' | 'exited' | 'unmounted';
+export type TransitionState =
+  | 'preEnter'
+  | 'entering'
+  | 'entered'
+  | 'preExit'
+  | 'exiting'
+  | 'exited'
+  | 'unmounted';
 
 export interface TransitionOptions {
   initialEntered?: boolean;
@@ -9,11 +15,9 @@ export interface TransitionOptions {
   preExit?: boolean;
   enter?: boolean;
   exit?: boolean;
-  timeout?: number | { enter?: number; exit?: number; };
+  timeout?: number | { enter?: number; exit?: number };
 }
 
-export function useTransition(options?: TransitionOptions): [
-  TransitionState,
-  (toEnter?: boolean) => void,
-  () => void
-];
+export function useTransition(
+  options?: TransitionOptions
+): [TransitionState, (toEnter?: boolean) => void, () => void];

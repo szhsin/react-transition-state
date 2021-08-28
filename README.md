@@ -10,7 +10,7 @@ This library was inspired by the [React Transition Group](https://github.com/rea
 - 🔄 Moving React components in and out of DOM seamlessly.
 - 🚫 Using no [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
 - 🚀 Efficient: each state transition results in at most one extract render for your component.
-- 🤏 Tiny in size: ideal for both component libraries and applications.
+- 🤏 Tiny: ideal for both component libraries and applications.
 
 ## Install
 
@@ -26,6 +26,7 @@ yarn add react-transition-state
 
 ```jsx
 import { useTransition } from 'react-transition-state';
+/* or import useTransition from 'react-transition-state'; */
 
 function Example() {
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
