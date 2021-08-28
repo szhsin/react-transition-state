@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTransition } from 'react-transition-state';
+import useTransition from 'react-transition-state';
 
 function BasicExample() {
   const [unmountOnExit, setUnmountOnExit] = useState(false);

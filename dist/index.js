@@ -188,4 +188,5 @@ var useTransition = function useTransition() {
   return [STATES[state], toggle, endTransition];
 };
 
+exports['default'] = useTransition;
 exports.useTransition = useTransition;

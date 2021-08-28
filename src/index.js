@@ -1,1 +1,1 @@
-export { useTransition } from './hooks/useTransition';
+export { useTransition as default, useTransition } from './hooks/useTransition';
