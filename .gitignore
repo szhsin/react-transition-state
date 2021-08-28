@@ -1,6 +1,6 @@
-/build
-/example
-/node_modules
+build
+example/
+node_modules/
 
 .DS_Store
 .env.local
