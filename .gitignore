@@ -11,17 +11,17 @@ lerna-debug.log*
 lib-cov
 
 # Coverage directory used by tools like istanbul
-/coverage
+coverage
 *.lcov
 
 # node-waf configuration
 .lock-wscript
 
 # production
-/build
+build
 
 # Dependency directories
-/node_modules
+node_modules
 
 # TypeScript cache
 *.tsbuildinfo
