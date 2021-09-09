@@ -195,3 +195,25 @@ test('should disable enter or exit phase', () => {
 
   expect(render).toHaveBeenCalledTimes(11);
 });
+
+test('should enable preEnter or preExit state', async () => {
+  const { result, render, waitForNextUpdate } = renderTransitionHook({
+    initialProps: { preEnter: true, preExit: true }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.preEnter);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.entering);
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.preExit);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.exiting);
+  result.endTransition();
+  expect(result.state).toBe(STATES.exited);
+
+  expect(render).toHaveBeenCalledTimes(7);
+});
