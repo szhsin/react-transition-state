@@ -217,3 +217,42 @@ test('should enable preEnter or preExit state', async () => {
 
   expect(render).toHaveBeenCalledTimes(7);
 });
+
+test('should start from entered when initialEntered is set', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { initialEntered: true }
+  });
+  expect(result.state).toBe(STATES.entered);
+  expect(render).toHaveBeenCalledTimes(1);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+});
+
+test('should start from unmounted when mountOnEnter is set', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { mountOnEnter: true }
+  });
+  expect(result.state).toBe(STATES.unmounted);
+  expect(render).toHaveBeenCalledTimes(1);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+});
+
+test('should unmount when unmountOnExit is set', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { unmountOnExit: true }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+  result.endTransition();
+  expect(result.state).toBe(STATES.unmounted);
+  expect(render).toHaveBeenCalledTimes(5);
+});
