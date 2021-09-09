@@ -166,3 +166,32 @@ test('should set enter and exit timeout separately', async () => {
   expect(result.state).toBe(STATES.exited);
   expect(render).toHaveBeenCalledTimes(10);
 });
+
+test('should disable enter or exit phase', () => {
+  const { result, render, rerender } = renderTransitionHook({
+    initialProps: { enter: false }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.entered);
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+  result.endTransition();
+  expect(result.state).toBe(STATES.exited);
+
+  rerender({ exit: false });
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+  result.toggle();
+  expect(result.state).toBe(STATES.exited);
+
+  rerender({ enter: false, exit: false });
+  result.toggle();
+  expect(result.state).toBe(STATES.entered);
+  result.toggle();
+  expect(result.state).toBe(STATES.exited);
+
+  expect(render).toHaveBeenCalledTimes(11);
+});
