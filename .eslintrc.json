@@ -1,6 +1,13 @@
 {
   "root": true,
-  "extends": ["eslint:recommended", "prettier", "plugin:react-hooks/recommended"],
+  "plugins": ["jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style",
+    "prettier",
+    "plugin:react-hooks/recommended"
+  ],
   "env": {
     "browser": true,
     "node": true,

@@ -58,7 +58,7 @@ const renderTransitionHook = (options) => {
 test('should return correct value', () => {
   const { result } = renderTransitionHook();
 
-  expect(result.length).toBe(3);
+  expect(result).toHaveLength(3);
   expect(result.state).toBe(STATES.exited);
   expect(typeof result.toggleFn).toBe('function');
   expect(typeof result.endTransitionFn).toBe('function');
