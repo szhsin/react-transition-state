@@ -106,3 +106,63 @@ test('should transition to specific state', () => {
   expect(result.state).toBe(STATES.entered);
   expect(render).toHaveBeenCalledTimes(5);
 });
+
+test('should update state after timeout', async () => {
+  const { result, render, waitForNextUpdate } = renderTransitionHook({
+    initialProps: { timeout: 50 }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  expect(render).toHaveBeenCalledTimes(2);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.entered);
+  expect(render).toHaveBeenCalledTimes(3);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.exited);
+  expect(render).toHaveBeenCalledTimes(5);
+
+  result.toggle();
+  result.toggle();
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.entered);
+  expect(render).toHaveBeenCalledTimes(9);
+
+  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+});
+
+test('should set enter and exit timeout separately', async () => {
+  const { result, render, rerender, waitForNextUpdate } = renderTransitionHook({
+    initialProps: { timeout: { enter: 50 } }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.entered);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+  result.endTransition();
+  expect(result.state).toBe(STATES.exited);
+  expect(render).toHaveBeenCalledTimes(5);
+
+  rerender({ timeout: { exit: 50 } });
+  result.toggle();
+  expect(result.state).toBe(STATES.entering);
+  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.exiting);
+  await waitForNextUpdate();
+  expect(result.state).toBe(STATES.exited);
+  expect(render).toHaveBeenCalledTimes(10);
+});
