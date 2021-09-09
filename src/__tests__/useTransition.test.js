@@ -79,6 +79,7 @@ test('should toggle state', () => {
 
   result.endTransition();
   expect(result.state).toBe(STATES.exited);
+
   expect(render).toHaveBeenCalledTimes(5);
 });
 
@@ -104,6 +105,10 @@ test('should transition to specific state', () => {
 
   result.endTransition();
   expect(result.state).toBe(STATES.entered);
+  // Call endTransition again intentionally
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
   expect(render).toHaveBeenCalledTimes(5);
 });
 
@@ -216,6 +221,24 @@ test('should enable preEnter or preExit state', async () => {
   expect(result.state).toBe(STATES.exited);
 
   expect(render).toHaveBeenCalledTimes(7);
+});
+
+test('should skip entering or exiting state', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { preEnter: true, preExit: true }
+  });
+
+  result.toggle();
+  expect(result.state).toBe(STATES.preEnter);
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
+  result.toggle();
+  expect(result.state).toBe(STATES.preExit);
+  result.endTransition();
+  expect(result.state).toBe(STATES.exited);
+
+  expect(render).toHaveBeenCalledTimes(5);
 });
 
 test('should start from entered when initialEntered is set', () => {
