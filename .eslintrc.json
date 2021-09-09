@@ -3,7 +3,8 @@
   "extends": ["eslint:recommended", "prettier", "plugin:react-hooks/recommended"],
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "parserOptions": {
     "ecmaVersion": "latest",
