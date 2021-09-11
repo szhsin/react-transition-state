@@ -1,4 +1,5 @@
 import BasicExample from './components/BasicExample';
+import StyledExample from './components/StyledExample';
 import './App.css';
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
         <img src="GitHub-64.png" alt="GitHub" />
       </a>
       <BasicExample />
+      <StyledExample />
     </div>
   );
 }

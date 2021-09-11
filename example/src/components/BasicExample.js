@@ -12,6 +12,7 @@ function BasicExample() {
 
   return (
     <div className="basic-example">
+      <h1>Basic example</h1>
       <div className="basic-console">
         <div className="basic-state">state: {state}</div>
         <label>
@@ -29,6 +30,9 @@ function BasicExample() {
       {state !== 'unmounted' && (
         <div className={`basic-transition ${state}`}>React transition state</div>
       )}
+      <a className="code-sandbox" href="https://codesandbox.io/s/react-transition-basic-100io">
+        Edit on CodeSandbox
+      </a>
     </div>
   );
 }
