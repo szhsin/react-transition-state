@@ -65,6 +65,7 @@ export default Example;
 <br/>
 
 ## styled-components example
+
 ```jsx
 import React from 'react';
 import styled from 'styled-components';

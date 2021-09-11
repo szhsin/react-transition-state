@@ -12,6 +12,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: #69a6f8;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #3688f6;
+}
+
+.code-sandbox {
+  display: block;
+  font-weight: 800;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
 .btn {
   padding: 0.375rem 0.75rem;
   min-width: 6rem;
