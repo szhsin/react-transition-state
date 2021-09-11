@@ -23,6 +23,8 @@ npm install react-transition-state
 yarn add react-transition-state
 ```
 
+<br/>
+
 ## Usage
 
 ```jsx
@@ -59,6 +61,55 @@ export default Example;
 ```
 
 **[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-basic-100io)**
+
+<br/>
+
+## styled-components example
+```jsx
+import React from 'react';
+import styled from 'styled-components';
+import { useTransition } from 'react-transition-state';
+
+const Box = styled.div`
+  transition: all 500ms;
+
+  ${({ state }) =>
+    (state === 'preEnter' || state === 'exiting') &&
+    `
+      opacity: 0;
+      transform: scale(0.9);
+    `}
+`;
+
+function StyledExample() {
+  const [state, toggle] = useTransition({
+    timeout: 500,
+    mountOnEnter: true,
+    unmountOnExit: true,
+    preEnter: true
+  });
+
+  const showButton = state === 'unmounted';
+  return (
+    <div>
+      {showButton && <button onClick={() => toggle(true)}>Show Message</button>}
+      {!showButton && (
+        <Box state={state}>
+          <h1>state: {state}</h1>
+          <p>This message is being transitioned in and out of the DOM.</p>
+          <button onClick={() => toggle(false)}>Close</button>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+export default StyledExample;
+```
+
+**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-styled-3id7q)**
+
+<br/>
 
 ## API
 
