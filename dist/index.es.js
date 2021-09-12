@@ -57,28 +57,25 @@ const useTransition = ({
     }
   }, [unmountOnExit]);
 
-  const transitState = useCallback(
-    (newState) => {
-      updateState(newState, setState, latestState, timeoutId);
-
-      switch (newState) {
-        case PRE_ENTER:
-        case PRE_EXIT:
-          timeoutId.current = setTimeout(() => transitState(newState + 1), 0);
-          break;
-        case ENTERING:
-          if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
-          break;
-        case EXITING:
-          if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
-          break;
-      }
-    },
-    [enterTimeout, exitTimeout, endTransition]
-  );
-
   const toggle = useCallback(
     (toEnter) => {
+      const transitState = (newState) => {
+        updateState(newState, setState, latestState, timeoutId);
+
+        switch (newState) {
+          case PRE_ENTER:
+          case PRE_EXIT:
+            timeoutId.current = setTimeout(() => transitState(newState + 1), 0);
+            break;
+          case ENTERING:
+            if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+            break;
+          case EXITING:
+            if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+            break;
+        }
+      };
+
       const enterStage = latestState.current <= ENTERED;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
@@ -92,7 +89,7 @@ const useTransition = ({
         }
       }
     },
-    [enter, exit, preEnter, preExit, unmountOnExit, transitState]
+    [enter, exit, preEnter, preExit, unmountOnExit, enterTimeout, exitTimeout, endTransition]
   );
 
   useEffect(() => () => clearTimeout(timeoutId.current), []);

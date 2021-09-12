@@ -146,27 +146,28 @@ var useTransition = function useTransition() {
       updateState(newState, setState, latestState, timeoutId);
     }
   }, [unmountOnExit]);
-  var transitState = react.useCallback(function (newState) {
-    updateState(newState, setState, latestState, timeoutId);
-
-    switch (newState) {
-      case PRE_ENTER:
-      case PRE_EXIT:
-        timeoutId.current = setTimeout(function () {
-          return transitState(newState + 1);
-        }, 0);
-        break;
-
-      case ENTERING:
-        if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
-        break;
-
-      case EXITING:
-        if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
-        break;
-    }
-  }, [enterTimeout, exitTimeout, endTransition]);
   var toggle = react.useCallback(function (toEnter) {
+    var transitState = function transitState(newState) {
+      updateState(newState, setState, latestState, timeoutId);
+
+      switch (newState) {
+        case PRE_ENTER:
+        case PRE_EXIT:
+          timeoutId.current = setTimeout(function () {
+            return transitState(newState + 1);
+          }, 0);
+          break;
+
+        case ENTERING:
+          if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+          break;
+
+        case EXITING:
+          if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+          break;
+      }
+    };
+
     var enterStage = latestState.current <= ENTERED;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
@@ -179,7 +180,7 @@ var useTransition = function useTransition() {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [enter, exit, preEnter, preExit, unmountOnExit, transitState]);
+  }, [enter, exit, preEnter, preExit, unmountOnExit, enterTimeout, exitTimeout, endTransition]);
   react.useEffect(function () {
     return function () {
       return clearTimeout(timeoutId.current);
