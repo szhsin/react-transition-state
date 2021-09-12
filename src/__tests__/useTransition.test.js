@@ -279,3 +279,17 @@ test('should unmount when unmountOnExit is set', () => {
   expect(result.state).toBe(STATES.unmounted);
   expect(render).toHaveBeenCalledTimes(5);
 });
+
+test('returned functions have stable identity across re-renders', () => {
+  const { result } = renderTransitionHook();
+  const prevToggle = result.toggleFn;
+  const prevEndTransition = result.endTransitionFn;
+
+  expect(result.state).toBe(STATES.exited);
+  result.toggle();
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+
+  expect(result.toggleFn).toBe(prevToggle);
+  expect(result.endTransitionFn).toBe(prevEndTransition);
+});
