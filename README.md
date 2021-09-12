@@ -13,6 +13,10 @@ This library was inspired by the [React Transition Group](https://github.com/rea
 - 🚀 Efficient: each state transition results in at most one extract render for your component.
 - 🤏 Tiny: ideal for both component libraries and applications.
 
+🤔 Not convinced? [See a comparison with _React Transition Group_](#comparisons-with-react-transition-group)
+
+<br/>
+
 ## Install
 
 ```bash
@@ -112,6 +116,19 @@ export default StyledExample;
 
 <br/>
 
+## Comparisons with _React Transition Group_
+
+|                                  | React Transition Group                                                                                                                                                                              | This library                                                                                                                                                                                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Use derived state                | _Yes_ – using an `in` prop to trigger changes in a separate transition state                                                                                                                        | _No_ – there is only a single state which is triggered by a toggle function                                                                                                                                                                           |
+| Controlled                       | _No_ – <br/>Transition state is managed internally.<br/>Resort to callback events to read the internal state.                                                                                       | _Yes_ – <br/>Transition state is _lifted_ up into the consuming component.<br/>You have direct access to the transition state.                                                                                                                        |
+| DOM updates                      | _Imperative_ – [commit changes into DOM imperatively](https://github.com/reactjs/react-transition-group/blob/5aa3fd2d7e3354a7e42505d55af605ff44f74e2e/src/CSSTransition.js#L10) to update `classes` | _Declarative_ – you declare [what the `classes` look like](https://github.com/szhsin/react-transition-state/blob/2ab44c12ac5d5283ec3bb997bfc1d5ef6dffb0ce/example/src/components/BasicExample.js#L31) and DOM updates are taken care of by `ReactDOM` |
+| Working with _styled-components_ | Your code looks like – <br/>`&.box-exit-active { opacity: 0; }`<br/>`&.box-enter-active { opacity: 1; }`                                                                                            | Your code looks like – <br/>`opacity: ${({ state }) => (state === 'exiting' ? '0' : '1')};` <br/> It's the way how you normally use the _styled-components_                                                                                           |
+
+This [CodeSandbox example](https://codesandbox.io/s/react-transition-state-vs-group-p45iy) demonstrates how the same transition can be implemented in a more simplified, declarative, and controllable manner than _React Transition Group_.
+
+<br/>
+
 ## API
 
 ### `useTransition` Hook
@@ -130,7 +147,7 @@ function useTransition(
 | `exit`           | boolean                                            | true    | Enable or disable exit phase transitions                                                                              |
 | `preEnter`       | boolean                                            |         | Add a 'preEnter' state immediately before 'entering'                                                                  |
 | `preExit`        | boolean                                            |         | Add a 'preExit' state immediately before 'exiting'                                                                    |
-| `initialEntered` | boolean                                            |         | Begining from 'entered' state                                                                                         |
+| `initialEntered` | boolean                                            |         | Beginning from 'entered' state                                                                                        |
 | `mountOnEnter`   | boolean                                            |         | State will be 'unmounted' until hit enter phase for the first time. It allows you to create lazily mounted component. |
 | `unmountOnExit`  | boolean                                            |         | State will become 'unmounted' after 'exiting' finishes. It allows you to transition component out of DOM.             |
 | `timeout`        | number \| <br />{ enter?: number; exit?: number; } |         | Set timeout in **ms** for transitions; you can set a single value or different values for enter and exit transitions. |
@@ -149,4 +166,10 @@ The `useTransition` Hook returns an array of values in the following order:
 
 - Call this function to stop transition which will turn state into 'entered' or 'exited'.
 - You will normally call this function in the `onAnimationEnd` or `onTransitionEnd` event.
-- You **must** either call this function explicitly in your code or set a timeout value in Hook options.
+- You _must_ either call this function explicitly in your code or set a timeout value in Hook options.
+
+<br/>
+
+## License
+
+[MIT](https://github.com/szhsin/react-transition-state/blob/master/LICENSE) Licensed.
