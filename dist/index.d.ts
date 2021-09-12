@@ -16,6 +16,7 @@ export interface TransitionOptions {
   enter?: boolean;
   exit?: boolean;
   timeout?: number | { enter?: number; exit?: number };
+  onChange?: (event: { state: TransitionState }) => void;
 }
 
 export function useTransition(

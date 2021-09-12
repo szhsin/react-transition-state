@@ -55,6 +55,8 @@ const renderTransitionHook = (options) => {
   return { result: new Result(result), render, ...rest };
 };
 
+const onChange = jest.fn();
+
 test('should return correct value', () => {
   const { result } = renderTransitionHook();
 
@@ -65,26 +67,31 @@ test('should return correct value', () => {
 });
 
 test('should toggle state', () => {
-  const { result, render } = renderTransitionHook();
+  const { result, render } = renderTransitionHook({ initialProps: { onChange } });
   expect(render).toHaveBeenCalledTimes(1);
 
   result.toggle();
   expect(result.state).toBe(STATES.entering);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.entering });
 
   result.endTransition();
   expect(result.state).toBe(STATES.entered);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.entered });
 
   result.toggle();
   expect(result.state).toBe(STATES.exiting);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.exiting });
 
   result.endTransition();
   expect(result.state).toBe(STATES.exited);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.exited });
 
   expect(render).toHaveBeenCalledTimes(5);
+  expect(onChange).toHaveBeenCalledTimes(4);
 });
 
 test('should transition to specific state', () => {
-  const { result, render } = renderTransitionHook();
+  const { result, render } = renderTransitionHook({ initialProps: { onChange } });
   expect(render).toHaveBeenCalledTimes(1);
 
   result.toggle(true);
@@ -110,11 +117,12 @@ test('should transition to specific state', () => {
   expect(result.state).toBe(STATES.entered);
 
   expect(render).toHaveBeenCalledTimes(5);
+  expect(onChange).toHaveBeenCalledTimes(4);
 });
 
 test('should update state after timeout', async () => {
   const { result, render, waitForNextUpdate } = renderTransitionHook({
-    initialProps: { timeout: 50 }
+    initialProps: { timeout: 50, onChange }
   });
 
   result.toggle();
@@ -122,12 +130,14 @@ test('should update state after timeout', async () => {
   expect(render).toHaveBeenCalledTimes(2);
   await waitForNextUpdate();
   expect(result.state).toBe(STATES.entered);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.entered });
   expect(render).toHaveBeenCalledTimes(3);
 
   result.toggle();
   expect(result.state).toBe(STATES.exiting);
   await waitForNextUpdate();
   expect(result.state).toBe(STATES.exited);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.exited });
   expect(render).toHaveBeenCalledTimes(5);
 
   result.toggle();
@@ -203,13 +213,15 @@ test('should disable enter or exit phase', () => {
 
 test('should enable preEnter or preExit state', async () => {
   const { result, render, waitForNextUpdate } = renderTransitionHook({
-    initialProps: { preEnter: true, preExit: true }
+    initialProps: { preEnter: true, preExit: true, onChange }
   });
 
   result.toggle();
   expect(result.state).toBe(STATES.preEnter);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.preEnter });
   await waitForNextUpdate();
   expect(result.state).toBe(STATES.entering);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.entering });
   result.endTransition();
   expect(result.state).toBe(STATES.entered);
 
@@ -265,7 +277,7 @@ test('should start from unmounted when mountOnEnter is set', () => {
 
 test('should unmount when unmountOnExit is set', () => {
   const { result, render } = renderTransitionHook({
-    initialProps: { unmountOnExit: true }
+    initialProps: { unmountOnExit: true, onChange }
   });
 
   result.toggle();
@@ -277,5 +289,24 @@ test('should unmount when unmountOnExit is set', () => {
   expect(result.state).toBe(STATES.exiting);
   result.endTransition();
   expect(result.state).toBe(STATES.unmounted);
+  expect(onChange).toHaveBeenLastCalledWith({ state: STATES.unmounted });
   expect(render).toHaveBeenCalledTimes(5);
+});
+
+test('returned functions have stable identity across re-renders', () => {
+  const onChange = () => {};
+  const { result, rerender } = renderTransitionHook({
+    initialProps: { onChange }
+  });
+  const prevToggle = result.toggleFn;
+  const prevEndTransition = result.endTransitionFn;
+
+  expect(result.state).toBe(STATES.exited);
+  result.toggle();
+  result.endTransition();
+  expect(result.state).toBe(STATES.entered);
+  rerender({ onChange });
+
+  expect(result.toggleFn).toBe(prevToggle);
+  expect(result.endTransitionFn).toBe(prevEndTransition);
 });
