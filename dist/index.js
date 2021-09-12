@@ -92,24 +92,28 @@ var startOrEnd = function startOrEnd(unmounted) {
   return unmounted ? UNMOUNTED : EXITED;
 };
 
-var updateState = function updateState(newState, setState, latestState, timeoutId) {
+var updateState = function updateState(state, setState, latestState, timeoutId, onChange) {
   clearTimeout(timeoutId.current);
-  setState(newState);
-  latestState.current = newState;
+  setState(state);
+  latestState.current = state;
+  onChange && onChange({
+    state: STATES[state]
+  });
 };
 
 var useTransition = function useTransition() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      initialEntered = _ref.initialEntered,
-      mountOnEnter = _ref.mountOnEnter,
-      unmountOnExit = _ref.unmountOnExit,
-      timeout = _ref.timeout,
-      preEnter = _ref.preEnter,
-      preExit = _ref.preExit,
       _ref$enter = _ref.enter,
       enter = _ref$enter === void 0 ? true : _ref$enter,
       _ref$exit = _ref.exit,
-      exit = _ref$exit === void 0 ? true : _ref$exit;
+      exit = _ref$exit === void 0 ? true : _ref$exit,
+      preEnter = _ref.preEnter,
+      preExit = _ref.preExit,
+      timeout = _ref.timeout,
+      initialEntered = _ref.initialEntered,
+      mountOnEnter = _ref.mountOnEnter,
+      unmountOnExit = _ref.unmountOnExit,
+      onChange = _ref.onChange;
 
   var _useState = react.useState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)),
       _useState2 = _slicedToArray(_useState, 2),
@@ -142,13 +146,13 @@ var useTransition = function useTransition() {
         break;
     }
 
-    if (newState) {
-      updateState(newState, setState, latestState, timeoutId);
+    if (newState !== undefined) {
+      updateState(newState, setState, latestState, timeoutId, onChange);
     }
-  }, [unmountOnExit]);
+  }, [onChange, unmountOnExit]);
   var toggle = react.useCallback(function (toEnter) {
     var transitState = function transitState(newState) {
-      updateState(newState, setState, latestState, timeoutId);
+      updateState(newState, setState, latestState, timeoutId, onChange);
 
       switch (newState) {
         case PRE_ENTER:
@@ -180,7 +184,7 @@ var useTransition = function useTransition() {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [enter, exit, preEnter, preExit, unmountOnExit, enterTimeout, exitTimeout, endTransition]);
+  }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
   react.useEffect(function () {
     return function () {
       return clearTimeout(timeoutId.current);
