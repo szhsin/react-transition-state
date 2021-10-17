@@ -12,6 +12,7 @@
     "setSpreadProperties": true,
     "skipForOfIteratorClosing": true
   },
+  "plugins": ["pure-annotations"],
   "presets": [
     [
       "@babel/preset-env",
