@@ -9,6 +9,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
@@ -20,9 +21,9 @@
     "hook"
   ],
   "scripts": {
-    "start": "rollup --config --watch",
+    "start": "rollup -c -w",
     "clean": "rm -Rf dist",
-    "bundle": "rollup --config",
+    "bundle": "rollup -c",
     "test": "jest",
     "eg": "npm start --prefix example",
     "dtslint": "dtslint --localTs node_modules/typescript/lib types",
@@ -53,7 +54,6 @@
     "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.9",
     "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.4.2"
   }
 }
