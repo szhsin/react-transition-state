@@ -19,6 +19,8 @@ export interface TransitionOptions {
   onChange?: (event: { state: TransitionState }) => void;
 }
 
-export function useTransition(
+export const useTransition: (
   options?: TransitionOptions
-): [TransitionState, (toEnter?: boolean) => void, () => void];
+) => [TransitionState, (toEnter?: boolean) => void, () => void];
+
+export default useTransition;

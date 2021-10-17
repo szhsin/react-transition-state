@@ -28,6 +28,7 @@
     "eg": "npm start --prefix example",
     "dtslint": "dtslint --localTs node_modules/typescript/lib types",
     "types": "npm run dtslint && cp -f types/index.d.ts dist/",
+    "tsc": "cd types && tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "pret": "prettier --write .",
