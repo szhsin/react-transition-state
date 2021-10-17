@@ -1,36 +1,23 @@
-import { terser } from 'rollup-plugin-terser';
-import babel from '@rollup/plugin-babel';
-
-const baseConfig = {
-  input: 'src/index.js',
-  external: ['react']
-};
+import { babel } from '@rollup/plugin-babel';
 
 /**
  * @type {import('rollup').RollupOptions}
  */
 export default [
   {
-    ...baseConfig,
-    output: {
-      file: 'dist/index.es.js',
-      format: 'es'
-    }
-  },
-  {
-    ...baseConfig,
-    watch: false,
+    input: 'src/index.js',
+    external: ['react'],
+    plugins: [babel({ babelHelpers: 'bundled' })],
     output: [
       {
-        file: 'dist/index.js',
-        format: 'cjs'
+        file: 'dist/index.es.js',
+        format: 'es'
       },
       {
-        file: 'dist/index.min.js',
+        file: 'dist/index.js',
         format: 'cjs',
-        plugins: [terser()]
+        exports: 'named'
       }
-    ],
-    plugins: [babel({ babelHelpers: 'bundled' })]
+    ]
   }
 ];

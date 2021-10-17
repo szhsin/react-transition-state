@@ -1,6 +1,6 @@
 {
   "root": true,
-  "plugins": ["jest"],
+  "plugins": ["jest", "react-hooks"],
   "extends": [
     "eslint:recommended",
     "plugin:jest/recommended",
