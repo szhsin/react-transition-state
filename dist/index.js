@@ -59,13 +59,13 @@ var useTransition = function useTransition(_temp) {
     var newState;
 
     switch (latestState.current) {
-      case PRE_ENTER:
       case ENTERING:
+      case PRE_ENTER:
         newState = ENTERED;
         break;
 
-      case PRE_EXIT:
       case EXITING:
+      case PRE_EXIT:
         newState = startOrEnd(unmountOnExit);
         break;
     }
@@ -79,19 +79,19 @@ var useTransition = function useTransition(_temp) {
       updateState(newState, setState, latestState, timeoutId, onChange);
 
       switch (newState) {
-        case PRE_ENTER:
-        case PRE_EXIT:
-          timeoutId.current = setTimeout(function () {
-            return transitState(newState + 1);
-          }, 0);
-          break;
-
         case ENTERING:
           if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
           break;
 
         case EXITING:
           if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+          break;
+
+        case PRE_ENTER:
+        case PRE_EXIT:
+          timeoutId.current = setTimeout(function () {
+            return transitState(newState + 1);
+          }, 0);
           break;
       }
     };
