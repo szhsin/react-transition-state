@@ -4,14 +4,11 @@
   "private": true,
   "homepage": "/react-transition-state",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.0",
-    "@testing-library/user-event": "^13.2.1",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
     "react-scripts": "4.0.3",
     "react-transition-state": "file:..",
-    "styled-components": "^5.3.1",
+    "styled-components": "^5.3.3",
     "web-vitals": "^2.1.2"
   },
   "scripts": {
