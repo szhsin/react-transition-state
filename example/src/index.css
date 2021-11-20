@@ -6,6 +6,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #18191a;
   color: #cad1d8;
+  padding-bottom: 500px;
 }
 
 code {
@@ -78,6 +79,10 @@ a:hover {
   margin: 3rem 0;
 }
 
+.basic-console em {
+  max-width: 26rem;
+}
+
 .basic-state {
   font-size: 1.25rem;
   font-weight: 600;
@@ -90,7 +95,7 @@ a:hover {
 .basic-transition {
   font-size: 3rem;
   font-weight: 800;
-  transition: all 0.75s;
+  transition: all 0.5s;
 }
 
 .basic-transition.preEnter,
