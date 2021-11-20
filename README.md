@@ -7,7 +7,7 @@
 
 ## Why?
 
-This library was inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group). It allows you to easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner:
+Inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group), this tiny library allows you to easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner, using a Hook API.
 
 - 🍭 Working with both CSS animation and transition.
 - 🔄 Moving React components in and out of DOM seamlessly.
@@ -18,6 +18,10 @@ This library was inspired by the [React Transition Group](https://github.com/rea
 🤔 Not convinced? [See a comparison with _React Transition Group_](#comparisons-with-react-transition-group)
 
 <br/>
+
+## State diagram
+
+![state-diagram](https://user-images.githubusercontent.com/41896553/142717714-9c5ca23f-6911-4783-9916-327c2415d109.png)
 
 ## Install
 
@@ -148,7 +152,7 @@ function useTransition(
 | ---------------- | -------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `enter`          | boolean                                            | true    | Enable or disable enter phase transitions                                                                                                                                                                                                                                                                                                             |
 | `exit`           | boolean                                            | true    | Enable or disable exit phase transitions                                                                                                                                                                                                                                                                                                              |
-| `preEnter`       | boolean                                            |         | Add a 'preEnter' state immediately before 'entering'                                                                                                                                                                                                                                                                                                  |
+| `preEnter`       | boolean                                            |         | Add a 'preEnter' state immediately before 'entering', which is necessary to change DOM elements from unmounted or `display: none` with CSS transition (not necessary for CSS animation).                                                                                                                                                              |
 | `preExit`        | boolean                                            |         | Add a 'preExit' state immediately before 'exiting'                                                                                                                                                                                                                                                                                                    |
 | `initialEntered` | boolean                                            |         | Beginning from 'entered' state                                                                                                                                                                                                                                                                                                                        |
 | `mountOnEnter`   | boolean                                            |         | State will be 'unmounted' until hit enter phase for the first time. It allows you to create lazily mounted component.                                                                                                                                                                                                                                 |
