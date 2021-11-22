@@ -7,13 +7,13 @@
 
 ## Why?
 
-Inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group), this tiny library allows you to easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner, using a Hook API.
+Inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group), this tiny library helps you easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner, using a Hook API.
 
 - 🍭 Working with both CSS animation and transition.
 - 🔄 Moving React components in and out of DOM seamlessly.
 - 🚫 Using no [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
 - 🚀 Efficient: each state transition results in at most one extract render for your component.
-- 🤏 Tiny: ideal for both component libraries and applications.
+- 🤏 Tiny: [~0.7KB](https://bundlephobia.com/package/react-transition-state) and no dependencies, ideal for both component libraries and applications.
 
 🤔 Not convinced? [See a comparison with _React Transition Group_](#comparisons-with-react-transition-group)
 
@@ -21,7 +21,10 @@ Inspired by the [React Transition Group](https://github.com/reactjs/react-transi
 
 ## State diagram
 
-![state-diagram](https://user-images.githubusercontent.com/41896553/142717714-9c5ca23f-6911-4783-9916-327c2415d109.png)
+![state-diagram](https://user-images.githubusercontent.com/41896553/142855447-cb8d8730-f8fb-4296-a3db-d1523b0fa2d9.png)
+The `initialEntered` and `mountOnEnter` props are omitted from the diagram to keep it less convoluted. [Please read more details at the API section](#usetransition-hook).
+
+<br/>
 
 ## Install
 
@@ -36,6 +39,8 @@ yarn add react-transition-state
 <br/>
 
 ## Usage
+
+### CSS example
 
 ```jsx
 import { useTransition } from 'react-transition-state';
@@ -74,7 +79,7 @@ export default Example;
 
 <br/>
 
-## styled-components example
+### styled-components example
 
 ```jsx
 import React from 'react';
@@ -118,6 +123,12 @@ export default StyledExample;
 ```
 
 **[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-styled-3id7q)**
+
+<br/>
+
+### tailwindcss example
+
+**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-tailwindcss-21nys)**
 
 <br/>
 
