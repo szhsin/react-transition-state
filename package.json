@@ -46,7 +46,7 @@
     "@types/jest": "^27.4.0",
     "babel-plugin-pure-annotations": "^0.1.2",
     "dtslint": "^4.1.6",
-    "eslint": "^7.32.0",
+    "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^25.3.4",
     "eslint-plugin-react-hooks": "^4.3.0",
