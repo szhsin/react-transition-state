@@ -5,14 +5,14 @@
 [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-state)](https://bundlephobia.com/package/react-transition-state)
 [![Known Vulnerabilities](https://snyk.io/test/github/szhsin/react-transition-state/badge.svg)](https://snyk.io/test/github/szhsin/react-transition-state)
 
-## Why?
+## Features
 
 Inspired by the [React Transition Group](https://github.com/reactjs/react-transition-group), this tiny library helps you easily perform animations/transitions of your React component in a [fully controlled](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#common-bugs-when-using-derived-state) manner, using a Hook API.
 
 - 🍭 Working with both CSS animation and transition.
 - 🔄 Moving React components in and out of DOM seamlessly.
 - 🚫 Using no [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
-- 🚀 Efficient: each state transition results in at most one extract render for your component.
+- 🚀 Efficient: each state transition results in at most one extract render for consuming component.
 - 🤏 Tiny: [~0.7KB](https://bundlephobia.com/package/react-transition-state) and no dependencies, ideal for both component libraries and applications.
 
 🤔 Not convinced? [See a comparison with _React Transition Group_](#comparisons-with-react-transition-group)
@@ -75,14 +75,13 @@ export default Example;
 }
 ```
 
-**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-basic-100io)**
+**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-state-100io)**
 
 <br/>
 
 ### styled-components example
 
 ```jsx
-import React from 'react';
 import styled from 'styled-components';
 import { useTransition } from 'react-transition-state';
 
@@ -132,18 +131,33 @@ export default StyledExample;
 
 <br/>
 
+### Perform appearing transition when page loads or a component mounts
+
+You can toggle on transition with the `useEffect` hook.
+
+```js
+useEffect(() => {
+  toggle(true);
+}, [toggle]);
+```
+
+**[Edit on CodeSandbox](https://codesandbox.io/s/react-transition-appear-9kkss3)**
+
+<br/>
+
 ## Comparisons with _React Transition Group_
 
-|                                  | React Transition Group                                                                                                                                                                              | This library                                                                                                                                                                                                                                          |
-| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Use derived state                | _Yes_ – use an `in` prop to trigger changes in a derived transition state                                                                                                                           | _No_ – there is only a single state which is triggered by a toggle function                                                                                                                                                                           |
-| Controlled                       | _No_ – <br/>Transition state is managed internally.<br/>Resort to callback events to read the internal state.                                                                                       | _Yes_ – <br/>Transition state is _lifted_ up into the consuming component.<br/>You have direct access to the transition state.                                                                                                                        |
-| DOM updates                      | _Imperative_ – [commit changes into DOM imperatively](https://github.com/reactjs/react-transition-group/blob/5aa3fd2d7e3354a7e42505d55af605ff44f74e2e/src/CSSTransition.js#L10) to update `classes` | _Declarative_ – you declare [what the `classes` look like](https://github.com/szhsin/react-transition-state/blob/2ab44c12ac5d5283ec3bb997bfc1d5ef6dffb0ce/example/src/components/BasicExample.js#L31) and DOM updates are taken care of by `ReactDOM` |
-| Working with _styled-components_ | Your code looks like – <br/>`&.box-exit-active { opacity: 0; }`<br/>`&.box-enter-active { opacity: 1; }`                                                                                            | Your code looks like – <br/>`opacity: ${({ state }) => (state === 'exiting' ? '0' : '1')};` <br/> It's the way how you normally use the _styled-components_                                                                                           |
-| Bundle size                      | [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-group)](https://bundlephobia.com/package/react-transition-group)                                                                | ✅ [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-state)](https://bundlephobia.com/package/react-transition-state)                                                                                                               |
-| Dependency count                 | [![NPM](https://badgen.net/bundlephobia/dependency-count/react-transition-group)](https://www.npmjs.com/package/react-transition-group?activeTab=dependencies)                                      | ✅ [![NPM](https://badgen.net/bundlephobia/dependency-count/react-transition-state)](https://www.npmjs.com/package/react-transition-state?activeTab=dependencies)                                                                                     |
+|                                               | React Transition Group                                                                                                                                                                              | This library                                                                                                                                                                                                                                          |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Use derived state                             | _Yes_ – use an `in` prop to trigger changes in a derived transition state                                                                                                                           | _No_ – there is only a single state which is triggered by a toggle function                                                                                                                                                                           |
+| Controlled                                    | _No_ – <br/>Transition state is managed internally.<br/>Resort to callback events to read the internal state.                                                                                       | _Yes_ – <br/>Transition state is _lifted_ up into the consuming component.<br/>You have direct access to the transition state.                                                                                                                        |
+| DOM updates                                   | _Imperative_ – [commit changes into DOM imperatively](https://github.com/reactjs/react-transition-group/blob/5aa3fd2d7e3354a7e42505d55af605ff44f74e2e/src/CSSTransition.js#L10) to update `classes` | _Declarative_ – you declare [what the `classes` look like](https://github.com/szhsin/react-transition-state/blob/2ab44c12ac5d5283ec3bb997bfc1d5ef6dffb0ce/example/src/components/BasicExample.js#L31) and DOM updates are taken care of by `ReactDOM` |
+| Render something in response to state updates | _Resort to side effects_ – rendering based on [state update events](https://codesandbox.io/s/react-transition-state-vs-group-p45iy?file=/src/App.js:1007-1188)                                      | _Pure_ – rendering based on [transition state](https://codesandbox.io/s/react-transition-state-vs-group-p45iy?file=/src/App.js:2140-2325)                                                                                                             |
+| Working with _styled-components_              | Your code looks like – <br/>`&.box-exit-active { opacity: 0; }`<br/>`&.box-enter-active { opacity: 1; }`                                                                                            | Your code looks like – <br/>`opacity: ${({ state }) => (state === 'exiting' ? '0' : '1')};` <br/> It's the way how you normally use the _styled-components_                                                                                           |
+| Bundle size                                   | [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-group)](https://bundlephobia.com/package/react-transition-group)                                                                | ✅ [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-state)](https://bundlephobia.com/package/react-transition-state)                                                                                                               |
+| Dependency count                              | [![NPM](https://badgen.net/bundlephobia/dependency-count/react-transition-group)](https://www.npmjs.com/package/react-transition-group?activeTab=dependencies)                                      | ✅ [![NPM](https://badgen.net/bundlephobia/dependency-count/react-transition-state)](https://www.npmjs.com/package/react-transition-state?activeTab=dependencies)                                                                                     |
 
-This [CodeSandbox example](https://codesandbox.io/s/react-transition-state-vs-group-p45iy) demonstrates how the same transition can be implemented in a more simplified, declarative, and controllable manner than _React Transition Group_.
+This [CodeSandbox example](https://codesandbox.io/s/react-transition-state-vs-group-p45iy) demonstrates how the same transition can be implemented in a simpler, more declarative, and controllable manner than _React Transition Group_.
 
 <br/>
 
