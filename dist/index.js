@@ -117,5 +117,5 @@ var useTransition = function useTransition(_temp) {
   return [STATES[state], toggle, endTransition];
 };
 
-exports['default'] = useTransition;
+exports["default"] = useTransition;
 exports.useTransition = useTransition;
