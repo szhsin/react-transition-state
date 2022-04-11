@@ -42,7 +42,7 @@
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@rollup/plugin-babel": "^5.3.1",
-    "@testing-library/react-hooks": "^7.0.2",
+    "@testing-library/react-hooks": "^8.0.0",
     "@types/jest": "^27.4.1",
     "babel-plugin-pure-annotations": "^0.1.2",
     "dtslint": "^4.1.6",
