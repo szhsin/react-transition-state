@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "1.1.4",
+  "version": "1.2.0-alpha.0",
   "description": "Zero dependency, 0.7KB react-transition-group alternative.",
   "author": "Zheng Song",
   "license": "MIT",
