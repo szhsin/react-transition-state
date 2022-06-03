@@ -1,6 +1,6 @@
 import { extends as _extends } from '../_virtual/_rollupPluginBabelHelpers.js';
 import { useState, useRef, useCallback } from 'react';
-import { ENTERED, startOrEnd, getEndState, PRE_EXIT, EXITING, PRE_ENTER, ENTERING, STATES, getTimeout } from './utils.js';
+import { ENTERED, startOrEnd, getEndState, PRE_EXIT, EXITING, PRE_ENTER, ENTERING, getFullState, getTimeout } from './utils.js';
 
 var initialStateMap = new Map();
 var initialConfigMap = new Map();
@@ -13,10 +13,7 @@ var updateState = function updateState(_ref) {
       timeoutId = _ref.timeoutId,
       onChange = _ref.onChange;
   clearTimeout(timeoutId);
-  var state = {
-    state: STATES[_state],
-    _state: _state
-  };
+  var state = getFullState(_state);
   var stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);

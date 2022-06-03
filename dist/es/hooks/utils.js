@@ -6,6 +6,14 @@ var EXITING = 4;
 var EXITED = 5;
 var UNMOUNTED = 6;
 var STATES = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+var getFullState = function getFullState(_state) {
+  return {
+    _state: _state,
+    state: STATES[_state],
+    isEnter: _state < PRE_EXIT,
+    isMounted: _state !== UNMOUNTED
+  };
+};
 var startOrEnd = function startOrEnd(unmounted) {
   return unmounted ? UNMOUNTED : EXITED;
 };
@@ -24,4 +32,4 @@ var getTimeout = function getTimeout(timeout) {
   return typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 };
 
-export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATES, UNMOUNTED, getEndState, getTimeout, startOrEnd };
+export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATES, UNMOUNTED, getEndState, getFullState, getTimeout, startOrEnd };

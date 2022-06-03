@@ -23,11 +23,21 @@ export const useTransition: (
   options?: TransitionOptions
 ) => [TransitionState, (toEnter?: boolean) => void, () => void];
 
-export const useTransitionMap: <K>() => {
-  stateMap: Omit<Map<K, { state: TransitionState }>, 'clear' | 'delete' | 'set' | 'size'>;
+interface State {
+  state: TransitionState;
+  isMounted: boolean;
+  isEnter: boolean;
+}
+
+export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onChange'> {
+  onChange?: (event: { key: K } & State) => void;
+}
+
+export const useTransitionMap: <K>(options?: { singleEnter: boolean }) => {
+  stateMap: Omit<Map<K, State>, 'clear' | 'delete' | 'set'>;
   toggle: (key: K, toEnter?: boolean) => void;
   endTransition: (key: K) => void;
-  setItem: (key: K, options?: TransitionOptions) => void;
+  setItem: (key: K, options?: TransitionMapOptions<K>) => void;
   deleteItem: (key: K) => boolean;
 };
 

@@ -16,6 +16,13 @@ export const STATES = [
   'unmounted'
 ];
 
+export const getFullState = (_state) => ({
+  _state,
+  state: STATES[_state],
+  isEnter: _state < PRE_EXIT,
+  isMounted: _state !== UNMOUNTED
+});
+
 export const startOrEnd = (unmounted) => (unmounted ? UNMOUNTED : EXITED);
 
 export const getEndState = (state, unmountOnExit) => {

@@ -12,6 +12,14 @@ var EXITING = 4;
 var EXITED = 5;
 var UNMOUNTED = 6;
 var STATES = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+var getFullState = function getFullState(_state) {
+  return {
+    _state: _state,
+    state: STATES[_state],
+    isEnter: _state < PRE_EXIT,
+    isMounted: _state !== UNMOUNTED
+  };
+};
 var startOrEnd = function startOrEnd(unmounted) {
   return unmounted ? UNMOUNTED : EXITED;
 };
@@ -140,10 +148,7 @@ var updateState = function updateState(_ref) {
       timeoutId = _ref.timeoutId,
       onChange = _ref.onChange;
   clearTimeout(timeoutId);
-  var state = {
-    state: STATES[_state],
-    _state: _state
-  };
+  var state = getFullState(_state);
   var stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);

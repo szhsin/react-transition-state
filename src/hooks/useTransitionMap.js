@@ -5,8 +5,8 @@ import {
   ENTERED,
   PRE_EXIT,
   EXITING,
-  STATES,
   startOrEnd,
+  getFullState,
   getEndState,
   getTimeout
 } from './utils';
@@ -23,7 +23,7 @@ const updateState = ({
   onChange
 }) => {
   clearTimeout(timeoutId);
-  const state = { state: STATES[_state], _state };
+  const state = getFullState(_state);
   const stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);
