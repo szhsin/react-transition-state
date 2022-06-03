@@ -8,10 +8,11 @@
   "homepage": "https://szhsin.github.io/react-transition-state/",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
-  "types": "dist/index.d.ts",
+  "types": "types/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist/",
+    "types/*.d.ts"
   ],
   "keywords": [
     "react",
@@ -26,8 +27,7 @@
     "bundle": "rollup -c",
     "test": "jest",
     "eg": "npm start --prefix example",
-    "dtslint": "dtslint --localTs node_modules/typescript/lib types",
-    "types": "npm run dtslint && cp -f types/index.d.ts dist/",
+    "types": "dtslint --localTs node_modules/typescript/lib types",
     "tsc": "cd types && tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
