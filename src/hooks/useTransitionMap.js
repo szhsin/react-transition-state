@@ -15,7 +15,7 @@ const initialStateMap = new Map();
 const initialConfigMap = new Map();
 
 const updateState = ({
-  item,
+  key,
   newState: _state,
   setStateMap,
   latestStateMap,
@@ -25,10 +25,10 @@ const updateState = ({
   clearTimeout(timeoutId);
   const state = { state: STATES[_state], _state };
   const stateMap = new Map(latestStateMap.current);
-  stateMap.set(item, state);
+  stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(item, state);
+  onChange && onChange(key, state);
 };
 
 const useTransitionMap = () => {
@@ -36,45 +36,47 @@ const useTransitionMap = () => {
   const latestStateMap = useRef(stateMap);
   const configMap = useRef(initialConfigMap);
 
-  const addItem = useCallback((item, config) => {
+  const setItem = useCallback((key, config = {}) => {
     const { initialEntered, mountOnEnter } = config;
     const newState = initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-    updateState({ item, newState, setStateMap, latestStateMap });
-    configMap.current.set(item, config);
+    updateState({ key, newState, setStateMap, latestStateMap });
+    configMap.current.set(key, config);
   }, []);
 
-  const removeItem = useCallback((item) => {
+  const deleteItem = useCallback((key) => {
     const newStateMap = new Map(latestStateMap.current);
-    if (newStateMap.delete(item)) {
+    if (newStateMap.delete(key)) {
       setStateMap(newStateMap);
       latestStateMap.current = newStateMap;
-      configMap.current.delete(item);
+      configMap.current.delete(key);
+      return true;
     }
+    return false;
   }, []);
 
-  const endTransition = useCallback((item) => {
-    const stateObj = latestStateMap.current.get(item);
+  const endTransition = useCallback((key) => {
+    const stateObj = latestStateMap.current.get(key);
     if (!stateObj) {
       process.env.NODE_ENV !== 'production' &&
-        console.error(`[React-Transition-State] invalid item key for ${item}`);
+        console.error(`[React-Transition-State] invalid key: ${key}`);
       return;
     }
 
-    const { timeoutId, onChange, unmountOnExit } = configMap.current.get(item);
+    const { timeoutId, onChange, unmountOnExit } = configMap.current.get(key);
     const newState = getEndState(stateObj._state, unmountOnExit);
-    newState && updateState({ item, newState, setStateMap, latestStateMap, timeoutId, onChange });
+    newState && updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
   }, []);
 
   const toggle = useCallback(
-    (item, toEnter) => {
-      const stateObj = latestStateMap.current.get(item);
+    (key, toEnter) => {
+      const stateObj = latestStateMap.current.get(key);
       if (!stateObj) {
         process.env.NODE_ENV !== 'production' &&
-          console.error(`[React-Transition-State] invalid item key for ${item}`);
+          console.error(`[React-Transition-State] invalid key: ${key}`);
         return;
       }
 
-      const config = configMap.current.get(item);
+      const config = configMap.current.get(key);
       const {
         enter = true,
         exit = true,
@@ -87,18 +89,18 @@ const useTransitionMap = () => {
       } = config;
 
       const transitState = (newState) => {
-        updateState({ item, newState, setStateMap, latestStateMap, timeoutId, onChange });
+        updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
         const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
         switch (newState) {
           case ENTERING:
             if (enterTimeout >= 0)
-              config.timeoutId = setTimeout(() => endTransition(item), enterTimeout);
+              config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
             break;
 
           case EXITING:
             if (exitTimeout >= 0)
-              config.timeoutId = setTimeout(() => endTransition(item), exitTimeout);
+              config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
             break;
 
           case PRE_ENTER:
@@ -124,7 +126,7 @@ const useTransitionMap = () => {
     [endTransition]
   );
 
-  return { stateMap, toggle, endTransition, addItem, removeItem };
+  return { stateMap, toggle, endTransition, setItem, deleteItem };
 };
 
 export { useTransitionMap };

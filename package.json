@@ -31,7 +31,8 @@
     "tsc": "cd types && tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "pret": "prettier --write .",
+    "pret": "prettier -c .",
+    "pret:fix": "prettier -w .",
     "build": "run-s clean lint pret bundle types"
   },
   "peerDependencies": {

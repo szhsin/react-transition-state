@@ -23,4 +23,12 @@ export const useTransition: (
   options?: TransitionOptions
 ) => [TransitionState, (toEnter?: boolean) => void, () => void];
 
+export const useTransitionMap: <K>() => {
+  stateMap: Omit<Map<K, { state: TransitionState }>, 'clear' | 'delete' | 'set' | 'size'>;
+  toggle: (key: K, toEnter?: boolean) => void;
+  endTransition: (key: K) => void;
+  setItem: (key: K, options?: TransitionOptions) => void;
+  deleteItem: (key: K) => boolean;
+};
+
 export default useTransition;

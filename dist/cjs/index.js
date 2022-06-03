@@ -115,7 +115,7 @@ var initialStateMap = new Map();
 var initialConfigMap = new Map();
 
 var updateState = function updateState(_ref) {
-  var item = _ref.item,
+  var key = _ref.key,
       _state = _ref.newState,
       setStateMap = _ref.setStateMap,
       latestStateMap = _ref.latestStateMap,
@@ -127,10 +127,10 @@ var updateState = function updateState(_ref) {
     _state: _state
   };
   var stateMap = new Map(latestStateMap.current);
-  stateMap.set(item, state);
+  stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(item, state);
+  onChange && onChange(key, state);
 };
 
 var useTransitionMap = function useTransitionMap() {
@@ -140,43 +140,51 @@ var useTransitionMap = function useTransitionMap() {
 
   var latestStateMap = react.useRef(stateMap);
   var configMap = react.useRef(initialConfigMap);
-  var addItem = react.useCallback(function (item, config) {
-    var initialEntered = config.initialEntered,
-        mountOnEnter = config.mountOnEnter;
+  var setItem = react.useCallback(function (key, config) {
+    if (config === void 0) {
+      config = {};
+    }
+
+    var _config = config,
+        initialEntered = _config.initialEntered,
+        mountOnEnter = _config.mountOnEnter;
     var newState = initialEntered ? ENTERED : startOrEnd(mountOnEnter);
     updateState({
-      item: item,
+      key: key,
       newState: newState,
       setStateMap: setStateMap,
       latestStateMap: latestStateMap
     });
-    configMap.current.set(item, config);
+    configMap.current.set(key, config);
   }, []);
-  var removeItem = react.useCallback(function (item) {
+  var deleteItem = react.useCallback(function (key) {
     var newStateMap = new Map(latestStateMap.current);
 
-    if (newStateMap.delete(item)) {
+    if (newStateMap.delete(key)) {
       setStateMap(newStateMap);
       latestStateMap.current = newStateMap;
-      configMap.current.delete(item);
+      configMap.current.delete(key);
+      return true;
     }
+
+    return false;
   }, []);
-  var endTransition = react.useCallback(function (item) {
-    var stateObj = latestStateMap.current.get(item);
+  var endTransition = react.useCallback(function (key) {
+    var stateObj = latestStateMap.current.get(key);
 
     if (!stateObj) {
-      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid item key for " + item);
+      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid key: " + key);
       return;
     }
 
-    var _configMap$current$ge = configMap.current.get(item),
+    var _configMap$current$ge = configMap.current.get(key),
         timeoutId = _configMap$current$ge.timeoutId,
         onChange = _configMap$current$ge.onChange,
         unmountOnExit = _configMap$current$ge.unmountOnExit;
 
     var newState = getEndState(stateObj._state, unmountOnExit);
     newState && updateState({
-      item: item,
+      key: key,
       newState: newState,
       setStateMap: setStateMap,
       latestStateMap: latestStateMap,
@@ -184,15 +192,15 @@ var useTransitionMap = function useTransitionMap() {
       onChange: onChange
     });
   }, []);
-  var toggle = react.useCallback(function (item, toEnter) {
-    var stateObj = latestStateMap.current.get(item);
+  var toggle = react.useCallback(function (key, toEnter) {
+    var stateObj = latestStateMap.current.get(key);
 
     if (!stateObj) {
-      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid item key for " + item);
+      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid key: " + key);
       return;
     }
 
-    var config = configMap.current.get(item);
+    var config = configMap.current.get(key);
     var _config$enter = config.enter,
         enter = _config$enter === void 0 ? true : _config$enter,
         _config$exit = config.exit,
@@ -206,7 +214,7 @@ var useTransitionMap = function useTransitionMap() {
 
     var transitState = function transitState(newState) {
       updateState({
-        item: item,
+        key: key,
         newState: newState,
         setStateMap: setStateMap,
         latestStateMap: latestStateMap,
@@ -221,13 +229,13 @@ var useTransitionMap = function useTransitionMap() {
       switch (newState) {
         case ENTERING:
           if (enterTimeout >= 0) config.timeoutId = setTimeout(function () {
-            return endTransition(item);
+            return endTransition(key);
           }, enterTimeout);
           break;
 
         case EXITING:
           if (exitTimeout >= 0) config.timeoutId = setTimeout(function () {
-            return endTransition(item);
+            return endTransition(key);
           }, exitTimeout);
           break;
 
@@ -257,8 +265,8 @@ var useTransitionMap = function useTransitionMap() {
     stateMap: stateMap,
     toggle: toggle,
     endTransition: endTransition,
-    addItem: addItem,
-    removeItem: removeItem
+    setItem: setItem,
+    deleteItem: deleteItem
   };
 };
 
