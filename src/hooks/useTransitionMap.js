@@ -28,10 +28,10 @@ const updateState = ({
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(key, state);
+  onChange && onChange({ key, ...state });
 };
 
-const useTransitionMap = () => {
+const useTransitionMap = ({ singleEnter } = {}) => {
   const [stateMap, setStateMap] = useState(initialStateMap);
   const latestStateMap = useRef(stateMap);
   const configMap = useRef(initialConfigMap);
@@ -40,7 +40,7 @@ const useTransitionMap = () => {
     const { initialEntered, mountOnEnter } = config;
     const newState = initialEntered ? ENTERED : startOrEnd(mountOnEnter);
     updateState({ key, newState, setStateMap, latestStateMap });
-    configMap.current.set(key, config);
+    configMap.current.set(key, { ...config });
   }, []);
 
   const deleteItem = useCallback((key) => {
@@ -116,6 +116,8 @@ const useTransitionMap = () => {
       if (toEnter) {
         if (!enterStage) {
           transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
+          singleEnter &&
+            latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
         }
       } else {
         if (enterStage) {
@@ -123,7 +125,7 @@ const useTransitionMap = () => {
         }
       }
     },
-    [endTransition]
+    [endTransition, singleEnter]
   );
 
   return { stateMap, toggle, endTransition, setItem, deleteItem };

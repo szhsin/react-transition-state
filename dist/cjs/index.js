@@ -111,6 +111,24 @@ var useTransition = function useTransition(_temp) {
   return [STATES[state], toggle, endTransition];
 };
 
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
 var initialStateMap = new Map();
 var initialConfigMap = new Map();
 
@@ -130,10 +148,15 @@ var updateState = function updateState(_ref) {
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(key, state);
+  onChange && onChange(_extends({
+    key: key
+  }, state));
 };
 
-var useTransitionMap = function useTransitionMap() {
+var useTransitionMap = function useTransitionMap(_temp) {
+  var _ref2 = _temp === void 0 ? {} : _temp,
+      singleEnter = _ref2.singleEnter;
+
   var _useState = react.useState(initialStateMap),
       stateMap = _useState[0],
       setStateMap = _useState[1];
@@ -155,7 +178,7 @@ var useTransitionMap = function useTransitionMap() {
       setStateMap: setStateMap,
       latestStateMap: latestStateMap
     });
-    configMap.current.set(key, config);
+    configMap.current.set(key, _extends({}, config));
   }, []);
   var deleteItem = react.useCallback(function (key) {
     var newStateMap = new Map(latestStateMap.current);
@@ -254,13 +277,16 @@ var useTransitionMap = function useTransitionMap() {
     if (toEnter) {
       if (!enterStage) {
         transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
+        singleEnter && latestStateMap.current.forEach(function (_, _key) {
+          return _key !== key && toggle(_key, false);
+        });
       }
     } else {
       if (enterStage) {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [endTransition]);
+  }, [endTransition, singleEnter]);
   return {
     stateMap: stateMap,
     toggle: toggle,

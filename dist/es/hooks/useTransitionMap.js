@@ -1,3 +1,4 @@
+import { extends as _extends } from '../_virtual/_rollupPluginBabelHelpers.js';
 import { useState, useRef, useCallback } from 'react';
 import { ENTERED, startOrEnd, getEndState, PRE_EXIT, EXITING, PRE_ENTER, ENTERING, STATES, getTimeout } from './utils.js';
 
@@ -20,10 +21,15 @@ var updateState = function updateState(_ref) {
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(key, state);
+  onChange && onChange(_extends({
+    key: key
+  }, state));
 };
 
-var useTransitionMap = function useTransitionMap() {
+var useTransitionMap = function useTransitionMap(_temp) {
+  var _ref2 = _temp === void 0 ? {} : _temp,
+      singleEnter = _ref2.singleEnter;
+
   var _useState = useState(initialStateMap),
       stateMap = _useState[0],
       setStateMap = _useState[1];
@@ -45,7 +51,7 @@ var useTransitionMap = function useTransitionMap() {
       setStateMap: setStateMap,
       latestStateMap: latestStateMap
     });
-    configMap.current.set(key, config);
+    configMap.current.set(key, _extends({}, config));
   }, []);
   var deleteItem = useCallback(function (key) {
     var newStateMap = new Map(latestStateMap.current);
@@ -144,13 +150,16 @@ var useTransitionMap = function useTransitionMap() {
     if (toEnter) {
       if (!enterStage) {
         transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
+        singleEnter && latestStateMap.current.forEach(function (_, _key) {
+          return _key !== key && toggle(_key, false);
+        });
       }
     } else {
       if (enterStage) {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [endTransition]);
+  }, [endTransition, singleEnter]);
   return {
     stateMap: stateMap,
     toggle: toggle,
