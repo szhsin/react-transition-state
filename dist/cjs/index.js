@@ -102,13 +102,9 @@ var useTransition = function useTransition(_temp) {
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
-      if (!enterStage) {
-        transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
-      }
+      !enterStage && transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
     } else {
-      if (enterStage) {
-        transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
-      }
+      enterStage && transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
     }
   }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
   react.useEffect(function () {

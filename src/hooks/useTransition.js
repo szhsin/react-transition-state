@@ -64,13 +64,10 @@ export const useTransition = ({
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
-        if (!enterStage) {
-          transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
-        }
+        !enterStage && transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
       } else {
-        if (enterStage) {
+        enterStage &&
           transitState(exit ? (preExit ? PRE_EXIT : EXITING) : startOrEnd(unmountOnExit));
-        }
       }
     },
     [
