@@ -1,6 +1,5 @@
-import { extends as _extends } from '../_virtual/_rollupPluginBabelHelpers.js';
 import { useState, useRef, useCallback } from 'react';
-import { ENTERED, startOrEnd, getEndState, PRE_EXIT, EXITING, PRE_ENTER, ENTERING, getFullState, getTimeout } from './utils.js';
+import { getTimeout, ENTERED, startOrEnd, getEndState, PRE_EXIT, EXITING, PRE_ENTER, ENTERING, getFullState } from './utils.js';
 
 var initialStateMap = new Map();
 var initialConfigMap = new Map();
@@ -18,14 +17,26 @@ var updateState = function updateState(_ref) {
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange(_extends({
-    key: key
-  }, state));
+  onChange && onChange({
+    key: key,
+    current: state
+  });
 };
 
 var useTransitionMap = function useTransitionMap(_temp) {
   var _ref2 = _temp === void 0 ? {} : _temp,
-      singleEnter = _ref2.singleEnter;
+      singleEnter = _ref2.singleEnter,
+      _ref2$enter = _ref2.enter,
+      enter = _ref2$enter === void 0 ? true : _ref2$enter,
+      _ref2$exit = _ref2.exit,
+      exit = _ref2$exit === void 0 ? true : _ref2$exit,
+      preEnter = _ref2.preEnter,
+      preExit = _ref2.preExit,
+      timeout = _ref2.timeout,
+      initialEntered = _ref2.initialEntered,
+      mountOnEnter = _ref2.mountOnEnter,
+      unmountOnExit = _ref2.unmountOnExit,
+      onChange = _ref2.onChange;
 
   var _useState = useState(initialStateMap),
       stateMap = _useState[0],
@@ -33,23 +44,25 @@ var useTransitionMap = function useTransitionMap(_temp) {
 
   var latestStateMap = useRef(stateMap);
   var configMap = useRef(initialConfigMap);
-  var setItem = useCallback(function (key, config) {
-    if (config === void 0) {
-      config = {};
-    }
 
-    var _config = config,
-        initialEntered = _config.initialEntered,
-        mountOnEnter = _config.mountOnEnter;
-    var newState = initialEntered ? ENTERED : startOrEnd(mountOnEnter);
+  var _getTimeout = getTimeout(timeout),
+      enterTimeout = _getTimeout[0],
+      exitTimeout = _getTimeout[1];
+
+  var setItem = useCallback(function (key, config) {
+    var _ref3 = config || {},
+        _ref3$initialEntered = _ref3.initialEntered,
+        _initialEntered = _ref3$initialEntered === void 0 ? initialEntered : _ref3$initialEntered;
+
+    var newState = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
     updateState({
       key: key,
       newState: newState,
       setStateMap: setStateMap,
       latestStateMap: latestStateMap
     });
-    configMap.current.set(key, _extends({}, config));
-  }, []);
+    configMap.current.set(key, {});
+  }, [initialEntered, mountOnEnter]);
   var deleteItem = useCallback(function (key) {
     var newStateMap = new Map(latestStateMap.current);
 
@@ -71,9 +84,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
     }
 
     var _configMap$current$ge = configMap.current.get(key),
-        timeoutId = _configMap$current$ge.timeoutId,
-        onChange = _configMap$current$ge.onChange,
-        unmountOnExit = _configMap$current$ge.unmountOnExit;
+        timeoutId = _configMap$current$ge.timeoutId;
 
     var newState = getEndState(stateObj._state, unmountOnExit);
     newState && updateState({
@@ -84,7 +95,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
       timeoutId: timeoutId,
       onChange: onChange
     });
-  }, []);
+  }, [onChange, unmountOnExit]);
   var toggle = useCallback(function (key, toEnter) {
     var stateObj = latestStateMap.current.get(key);
 
@@ -94,16 +105,6 @@ var useTransitionMap = function useTransitionMap(_temp) {
     }
 
     var config = configMap.current.get(key);
-    var _config$enter = config.enter,
-        enter = _config$enter === void 0 ? true : _config$enter,
-        _config$exit = config.exit,
-        exit = _config$exit === void 0 ? true : _config$exit,
-        preEnter = config.preEnter,
-        preExit = config.preExit,
-        timeout = config.timeout,
-        unmountOnExit = config.unmountOnExit,
-        onChange = config.onChange,
-        timeoutId = config.timeoutId;
 
     var transitState = function transitState(newState) {
       updateState({
@@ -111,13 +112,9 @@ var useTransitionMap = function useTransitionMap(_temp) {
         newState: newState,
         setStateMap: setStateMap,
         latestStateMap: latestStateMap,
-        timeoutId: timeoutId,
+        timeoutId: config.timeoutId,
         onChange: onChange
       });
-
-      var _getTimeout = getTimeout(timeout),
-          enterTimeout = _getTimeout[0],
-          exitTimeout = _getTimeout[1];
 
       switch (newState) {
         case ENTERING:
@@ -156,7 +153,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [endTransition, singleEnter]);
+  }, [onChange, endTransition, singleEnter, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
   return {
     stateMap: stateMap,
     toggle: toggle,

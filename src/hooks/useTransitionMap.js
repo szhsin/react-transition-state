@@ -28,20 +28,35 @@ const updateState = ({
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
-  onChange && onChange({ key, ...state });
+  onChange && onChange({ key, current: state });
 };
 
-const useTransitionMap = ({ singleEnter } = {}) => {
+const useTransitionMap = ({
+  singleEnter,
+  enter = true,
+  exit = true,
+  preEnter,
+  preExit,
+  timeout,
+  initialEntered,
+  mountOnEnter,
+  unmountOnExit,
+  onChange
+} = {}) => {
   const [stateMap, setStateMap] = useState(initialStateMap);
   const latestStateMap = useRef(stateMap);
   const configMap = useRef(initialConfigMap);
+  const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
-  const setItem = useCallback((key, config = {}) => {
-    const { initialEntered, mountOnEnter } = config;
-    const newState = initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-    updateState({ key, newState, setStateMap, latestStateMap });
-    configMap.current.set(key, { ...config });
-  }, []);
+  const setItem = useCallback(
+    (key, config) => {
+      const { initialEntered: _initialEntered = initialEntered } = config || {};
+      const newState = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
+      updateState({ key, newState, setStateMap, latestStateMap });
+      configMap.current.set(key, {});
+    },
+    [initialEntered, mountOnEnter]
+  );
 
   const deleteItem = useCallback((key) => {
     const newStateMap = new Map(latestStateMap.current);
@@ -54,18 +69,21 @@ const useTransitionMap = ({ singleEnter } = {}) => {
     return false;
   }, []);
 
-  const endTransition = useCallback((key) => {
-    const stateObj = latestStateMap.current.get(key);
-    if (!stateObj) {
-      process.env.NODE_ENV !== 'production' &&
-        console.error(`[React-Transition-State] invalid key: ${key}`);
-      return;
-    }
+  const endTransition = useCallback(
+    (key) => {
+      const stateObj = latestStateMap.current.get(key);
+      if (!stateObj) {
+        process.env.NODE_ENV !== 'production' &&
+          console.error(`[React-Transition-State] invalid key: ${key}`);
+        return;
+      }
 
-    const { timeoutId, onChange, unmountOnExit } = configMap.current.get(key);
-    const newState = getEndState(stateObj._state, unmountOnExit);
-    newState && updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
-  }, []);
+      const { timeoutId } = configMap.current.get(key);
+      const newState = getEndState(stateObj._state, unmountOnExit);
+      newState && updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
+    },
+    [onChange, unmountOnExit]
+  );
 
   const toggle = useCallback(
     (key, toEnter) => {
@@ -77,20 +95,16 @@ const useTransitionMap = ({ singleEnter } = {}) => {
       }
 
       const config = configMap.current.get(key);
-      const {
-        enter = true,
-        exit = true,
-        preEnter,
-        preExit,
-        timeout,
-        unmountOnExit,
-        onChange,
-        timeoutId
-      } = config;
 
       const transitState = (newState) => {
-        updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
-        const [enterTimeout, exitTimeout] = getTimeout(timeout);
+        updateState({
+          key,
+          newState,
+          setStateMap,
+          latestStateMap,
+          timeoutId: config.timeoutId,
+          onChange
+        });
 
         switch (newState) {
           case ENTERING:
@@ -125,7 +139,18 @@ const useTransitionMap = ({ singleEnter } = {}) => {
         }
       }
     },
-    [endTransition, singleEnter]
+    [
+      onChange,
+      endTransition,
+      singleEnter,
+      enter,
+      exit,
+      preEnter,
+      preExit,
+      enterTimeout,
+      exitTimeout,
+      unmountOnExit
+    ]
   );
 
   return { stateMap, toggle, endTransition, setItem, deleteItem };

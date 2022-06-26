@@ -25,12 +25,13 @@ export interface TransitionOptions {
   onChange?: (event: { state: TransitionState }) => void;
 }
 
-export interface TransitionItemOptions<K> extends Omit<TransitionOptions, 'onChange'> {
-  onChange?: (event: { key: K } & State) => void;
+export interface TransitionItemOptions {
+  initialEntered?: boolean;
 }
 
-export interface TransitionMapOptions {
+export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onChange'> {
   singleEnter?: boolean;
+  onChange?: (event: { key: K; current: State }) => void;
 }
 
 export type TransitionResult = [TransitionState, (toEnter?: boolean) => void, () => void];
@@ -39,12 +40,12 @@ export interface TransitionMapResult<K> {
   stateMap: Omit<Map<K, State>, 'clear' | 'delete' | 'set'>;
   toggle: (key: K, toEnter?: boolean) => void;
   endTransition: (key: K) => void;
-  setItem: (key: K, options?: TransitionItemOptions<K>) => void;
+  setItem: (key: K, options?: TransitionItemOptions) => void;
   deleteItem: (key: K) => boolean;
 }
 
 export const useTransition: (options?: TransitionOptions) => TransitionResult;
 
-export const useTransitionMap: <K>(options?: TransitionMapOptions) => TransitionMapResult<K>;
+export const useTransitionMap: <K>(options?: TransitionMapOptions<K>) => TransitionMapResult<K>;
 
 export default useTransition;
