@@ -20,7 +20,8 @@ export const getFullState = (_state) => ({
   _state,
   state: STATES[_state],
   isEnter: _state < PRE_EXIT,
-  isMounted: _state !== UNMOUNTED
+  isMounted: _state !== UNMOUNTED,
+  isResolved: _state === ENTERED || _state > EXITING
 });
 
 export const startOrEnd = (unmounted) => (unmounted ? UNMOUNTED : EXITED);

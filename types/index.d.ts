@@ -11,6 +11,7 @@ export interface State {
   state: TransitionState;
   isMounted: boolean;
   isEnter: boolean;
+  isResolved: boolean;
 }
 
 export interface TransitionOptions {

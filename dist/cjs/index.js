@@ -17,7 +17,8 @@ var getFullState = function getFullState(_state) {
     _state: _state,
     state: STATES[_state],
     isEnter: _state < PRE_EXIT,
-    isMounted: _state !== UNMOUNTED
+    isMounted: _state !== UNMOUNTED,
+    isResolved: _state === ENTERED || _state > EXITING
   };
 };
 var startOrEnd = function startOrEnd(unmounted) {
