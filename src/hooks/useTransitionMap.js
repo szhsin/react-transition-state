@@ -41,7 +41,7 @@ const useTransitionMap = ({
   initialEntered,
   mountOnEnter,
   unmountOnExit,
-  onChange
+  onStateChange: onChange
 } = {}) => {
   const [stateMap, setStateMap] = useState(initialStateMap);
   const latestStateMap = useRef(stateMap);

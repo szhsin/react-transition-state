@@ -31,7 +31,7 @@ export interface TransitionItemOptions {
 
 export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onChange'> {
   singleEnter?: boolean;
-  onChange?: (event: { key: K; current: State }) => void;
+  onStateChange?: (event: { key: K; current: State }) => void;
 }
 
 export type TransitionResult = [TransitionState, (toEnter?: boolean) => void, () => void];

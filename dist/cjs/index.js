@@ -150,7 +150,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
       initialEntered = _ref2.initialEntered,
       mountOnEnter = _ref2.mountOnEnter,
       unmountOnExit = _ref2.unmountOnExit,
-      onChange = _ref2.onChange;
+      onChange = _ref2.onStateChange;
 
   var _useState = react.useState(initialStateMap),
       stateMap = _useState[0],
