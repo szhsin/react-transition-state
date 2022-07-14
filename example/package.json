@@ -6,7 +6,7 @@
   "dependencies": {
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
-    "react-scripts": "5.0.0",
+    "react-scripts": "5.0.1",
     "react-transition-state": "file:..",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
