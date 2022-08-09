@@ -6,7 +6,7 @@ export const EXITING = 4;
 export const EXITED = 5;
 export const UNMOUNTED = 6;
 
-export const STATES = [
+export const STATUS = [
   'preEnter',
   'entering',
   'entered',
@@ -16,18 +16,18 @@ export const STATES = [
   'unmounted'
 ];
 
-export const getFullState = (_state) => ({
-  _state,
-  state: STATES[_state],
-  isEnter: _state < PRE_EXIT,
-  isMounted: _state !== UNMOUNTED,
-  isResolved: _state === ENTERED || _state > EXITING
+export const getState = (_status) => ({
+  _status,
+  status: STATUS[_status],
+  isEnter: _status < PRE_EXIT,
+  isMounted: _status !== UNMOUNTED,
+  isResolved: _status === ENTERED || _status > EXITING
 });
 
 export const startOrEnd = (unmounted) => (unmounted ? UNMOUNTED : EXITED);
 
-export const getEndState = (state, unmountOnExit) => {
-  switch (state) {
+export const getEndStatus = (status, unmountOnExit) => {
+  switch (status) {
     case ENTERING:
     case PRE_ENTER:
       return ENTERED;

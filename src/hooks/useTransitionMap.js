@@ -6,8 +6,8 @@ import {
   PRE_EXIT,
   EXITING,
   startOrEnd,
-  getFullState,
-  getEndState,
+  getState,
+  getEndStatus,
   getTimeout
 } from './utils';
 
@@ -16,14 +16,14 @@ const initialConfigMap = new Map();
 
 const updateState = ({
   key,
-  newState: _state,
+  status,
   setStateMap,
   latestStateMap,
   timeoutId,
   onChange
 }) => {
   clearTimeout(timeoutId);
-  const state = getFullState(_state);
+  const state = getState(status);
   const stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);
@@ -51,8 +51,8 @@ const useTransitionMap = ({
   const setItem = useCallback(
     (key, config) => {
       const { initialEntered: _initialEntered = initialEntered } = config || {};
-      const newState = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-      updateState({ key, newState, setStateMap, latestStateMap });
+      const status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
+      updateState({ key, status, setStateMap, latestStateMap });
       configMap.current.set(key, {});
     },
     [initialEntered, mountOnEnter]
@@ -79,8 +79,8 @@ const useTransitionMap = ({
       }
 
       const { timeoutId } = configMap.current.get(key);
-      const newState = getEndState(stateObj._state, unmountOnExit);
-      newState && updateState({ key, newState, setStateMap, latestStateMap, timeoutId, onChange });
+      const status = getEndStatus(stateObj._status, unmountOnExit);
+      status && updateState({ key, status, setStateMap, latestStateMap, timeoutId, onChange });
     },
     [onChange, unmountOnExit]
   );
@@ -96,17 +96,17 @@ const useTransitionMap = ({
 
       const config = configMap.current.get(key);
 
-      const transitState = (newState) => {
+      const transitState = (status) => {
         updateState({
           key,
-          newState,
+          status,
           setStateMap,
           latestStateMap,
           timeoutId: config.timeoutId,
           onChange
         });
 
-        switch (newState) {
+        switch (status) {
           case ENTERING:
             if (enterTimeout >= 0)
               config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
@@ -119,12 +119,12 @@ const useTransitionMap = ({
 
           case PRE_ENTER:
           case PRE_EXIT:
-            config.timeoutId = setTimeout(() => transitState(newState + 1), 0);
+            config.timeoutId = setTimeout(() => transitState(status + 1), 0);
             break;
         }
       };
 
-      const enterStage = stateObj._state <= ENTERED;
+      const enterStage = stateObj._status <= ENTERED;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
