@@ -1,4 +1,4 @@
-export type TransitionState =
+export type TransitionStatus =
   | 'preEnter'
   | 'entering'
   | 'entered'
@@ -7,8 +7,8 @@ export type TransitionState =
   | 'exited'
   | 'unmounted';
 
-export interface State {
-  state: TransitionState;
+export interface TransitionState {
+  status: TransitionStatus;
   isMounted: boolean;
   isEnter: boolean;
   isResolved: boolean;
@@ -23,22 +23,22 @@ export interface TransitionOptions {
   enter?: boolean;
   exit?: boolean;
   timeout?: number | { enter?: number; exit?: number };
-  onChange?: (event: { state: TransitionState }) => void;
+  onStateChange?: (event: { current: TransitionState }) => void;
 }
 
 export interface TransitionItemOptions {
   initialEntered?: boolean;
 }
 
-export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onChange'> {
+export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onStateChange'> {
   singleEnter?: boolean;
-  onStateChange?: (event: { key: K; current: State }) => void;
+  onStateChange?: (event: { key: K; current: TransitionState }) => void;
 }
 
 export type TransitionResult = [TransitionState, (toEnter?: boolean) => void, () => void];
 
 export interface TransitionMapResult<K> {
-  stateMap: Omit<Map<K, State>, 'clear' | 'delete' | 'set'>;
+  stateMap: ReadonlyMap<K, TransitionState>;
   toggle: (key: K, toEnter?: boolean) => void;
   endTransition: (key: K) => void;
   setItem: (key: K, options?: TransitionItemOptions) => void;

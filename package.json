@@ -1,7 +1,7 @@
 {
   "name": "react-transition-state",
-  "version": "1.2.0-alpha.5",
-  "description": "Zero dependency, 0.7KB react-transition-group alternative.",
+  "version": "2.0.0-alpha.0",
+  "description": "Zero dependency React transition state machine.",
   "author": "Zheng Song",
   "license": "MIT",
   "repository": "szhsin/react-transition-state",
@@ -19,7 +19,8 @@
     "transition",
     "animation",
     "component",
-    "hook"
+    "hook",
+    "state machine"
   ],
   "scripts": {
     "start": "rollup -c -w",

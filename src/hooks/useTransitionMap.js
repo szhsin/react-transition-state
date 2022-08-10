@@ -14,14 +14,7 @@ import {
 const initialStateMap = new Map();
 const initialConfigMap = new Map();
 
-const updateState = ({
-  key,
-  status,
-  setStateMap,
-  latestStateMap,
-  timeoutId,
-  onChange
-}) => {
+const updateState = ({ key, status, setStateMap, latestStateMap, timeoutId, onChange }) => {
   clearTimeout(timeoutId);
   const state = getState(status);
   const stateMap = new Map(latestStateMap.current);

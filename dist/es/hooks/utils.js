@@ -5,21 +5,21 @@ var PRE_EXIT = 3;
 var EXITING = 4;
 var EXITED = 5;
 var UNMOUNTED = 6;
-var STATES = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-var getFullState = function getFullState(_state) {
+var STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+var getState = function getState(_status) {
   return {
-    _state: _state,
-    state: STATES[_state],
-    isEnter: _state < PRE_EXIT,
-    isMounted: _state !== UNMOUNTED,
-    isResolved: _state === ENTERED || _state > EXITING
+    _status: _status,
+    status: STATUS[_status],
+    isEnter: _status < PRE_EXIT,
+    isMounted: _status !== UNMOUNTED,
+    isResolved: _status === ENTERED || _status > EXITING
   };
 };
 var startOrEnd = function startOrEnd(unmounted) {
   return unmounted ? UNMOUNTED : EXITED;
 };
-var getEndState = function getEndState(state, unmountOnExit) {
-  switch (state) {
+var getEndStatus = function getEndStatus(status, unmountOnExit) {
+  switch (status) {
     case ENTERING:
     case PRE_ENTER:
       return ENTERED;
@@ -33,4 +33,4 @@ var getTimeout = function getTimeout(timeout) {
   return typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 };
 
-export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATES, UNMOUNTED, getEndState, getFullState, getTimeout, startOrEnd };
+export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATUS, UNMOUNTED, getEndStatus, getState, getTimeout, startOrEnd };

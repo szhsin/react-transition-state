@@ -11,21 +11,21 @@ var PRE_EXIT = 3;
 var EXITING = 4;
 var EXITED = 5;
 var UNMOUNTED = 6;
-var STATES = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-var getFullState = function getFullState(_state) {
+var STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+var getState = function getState(_status) {
   return {
-    _state: _state,
-    state: STATES[_state],
-    isEnter: _state < PRE_EXIT,
-    isMounted: _state !== UNMOUNTED,
-    isResolved: _state === ENTERED || _state > EXITING
+    _status: _status,
+    status: STATUS[_status],
+    isEnter: _status < PRE_EXIT,
+    isMounted: _status !== UNMOUNTED,
+    isResolved: _status === ENTERED || _status > EXITING
   };
 };
 var startOrEnd = function startOrEnd(unmounted) {
   return unmounted ? UNMOUNTED : EXITED;
 };
-var getEndState = function getEndState(state, unmountOnExit) {
-  switch (state) {
+var getEndStatus = function getEndStatus(status, unmountOnExit) {
+  switch (status) {
     case ENTERING:
     case PRE_ENTER:
       return ENTERED;
@@ -39,12 +39,13 @@ var getTimeout = function getTimeout(timeout) {
   return typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 };
 
-var updateState$1 = function updateState(state, setState, latestState, timeoutId, onChange) {
+var updateState$1 = function updateState(status, setState, latestState, timeoutId, onChange) {
   clearTimeout(timeoutId.current);
+  var state = getState(status);
   setState(state);
   latestState.current = state;
   onChange && onChange({
-    state: STATES[state]
+    current: state
   });
 };
 
@@ -60,9 +61,11 @@ var useTransition = function useTransition(_temp) {
       initialEntered = _ref.initialEntered,
       mountOnEnter = _ref.mountOnEnter,
       unmountOnExit = _ref.unmountOnExit,
-      onChange = _ref.onChange;
+      onChange = _ref.onStateChange;
 
-  var _useState = react.useState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)),
+  var _useState = react.useState(function () {
+    return getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter));
+  }),
       state = _useState[0],
       setState = _useState[1];
 
@@ -74,14 +77,14 @@ var useTransition = function useTransition(_temp) {
       exitTimeout = _getTimeout[1];
 
   var endTransition = react.useCallback(function () {
-    var newState = getEndState(latestState.current, unmountOnExit);
-    newState && updateState$1(newState, setState, latestState, timeoutId, onChange);
+    var status = getEndStatus(latestState.current._status, unmountOnExit);
+    status && updateState$1(status, setState, latestState, timeoutId, onChange);
   }, [onChange, unmountOnExit]);
   var toggle = react.useCallback(function (toEnter) {
-    var transitState = function transitState(newState) {
-      updateState$1(newState, setState, latestState, timeoutId, onChange);
+    var transitState = function transitState(status) {
+      updateState$1(status, setState, latestState, timeoutId, onChange);
 
-      switch (newState) {
+      switch (status) {
         case ENTERING:
           if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
           break;
@@ -93,13 +96,13 @@ var useTransition = function useTransition(_temp) {
         case PRE_ENTER:
         case PRE_EXIT:
           timeoutId.current = setTimeout(function () {
-            return transitState(newState + 1);
+            return transitState(status + 1);
           }, 0);
           break;
       }
     };
 
-    var enterStage = latestState.current <= ENTERED;
+    var enterStage = latestState.current._status <= ENTERED;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
@@ -113,7 +116,7 @@ var useTransition = function useTransition(_temp) {
       return clearTimeout(timeoutId.current);
     };
   }, []);
-  return [STATES[state], toggle, endTransition];
+  return [state, toggle, endTransition];
 };
 
 var initialStateMap = new Map();
@@ -121,13 +124,13 @@ var initialConfigMap = new Map();
 
 var updateState = function updateState(_ref) {
   var key = _ref.key,
-      _state = _ref.newState,
+      status = _ref.status,
       setStateMap = _ref.setStateMap,
       latestStateMap = _ref.latestStateMap,
       timeoutId = _ref.timeoutId,
       onChange = _ref.onChange;
   clearTimeout(timeoutId);
-  var state = getFullState(_state);
+  var state = getState(status);
   var stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);
@@ -169,10 +172,10 @@ var useTransitionMap = function useTransitionMap(_temp) {
         _ref3$initialEntered = _ref3.initialEntered,
         _initialEntered = _ref3$initialEntered === void 0 ? initialEntered : _ref3$initialEntered;
 
-    var newState = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
+    var status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
     updateState({
       key: key,
-      newState: newState,
+      status: status,
       setStateMap: setStateMap,
       latestStateMap: latestStateMap
     });
@@ -201,10 +204,10 @@ var useTransitionMap = function useTransitionMap(_temp) {
     var _configMap$current$ge = configMap.current.get(key),
         timeoutId = _configMap$current$ge.timeoutId;
 
-    var newState = getEndState(stateObj._state, unmountOnExit);
-    newState && updateState({
+    var status = getEndStatus(stateObj._status, unmountOnExit);
+    status && updateState({
       key: key,
-      newState: newState,
+      status: status,
       setStateMap: setStateMap,
       latestStateMap: latestStateMap,
       timeoutId: timeoutId,
@@ -221,17 +224,17 @@ var useTransitionMap = function useTransitionMap(_temp) {
 
     var config = configMap.current.get(key);
 
-    var transitState = function transitState(newState) {
+    var transitState = function transitState(status) {
       updateState({
         key: key,
-        newState: newState,
+        status: status,
         setStateMap: setStateMap,
         latestStateMap: latestStateMap,
         timeoutId: config.timeoutId,
         onChange: onChange
       });
 
-      switch (newState) {
+      switch (status) {
         case ENTERING:
           if (enterTimeout >= 0) config.timeoutId = setTimeout(function () {
             return endTransition(key);
@@ -247,13 +250,13 @@ var useTransitionMap = function useTransitionMap(_temp) {
         case PRE_ENTER:
         case PRE_EXIT:
           config.timeoutId = setTimeout(function () {
-            return transitState(newState + 1);
+            return transitState(status + 1);
           }, 0);
           break;
       }
     };
 
-    var enterStage = stateObj._state <= ENTERED;
+    var enterStage = stateObj._status <= ENTERED;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
