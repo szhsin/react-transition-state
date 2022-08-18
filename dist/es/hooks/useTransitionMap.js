@@ -25,7 +25,7 @@ var updateState = function updateState(_ref) {
 
 var useTransitionMap = function useTransitionMap(_temp) {
   var _ref2 = _temp === void 0 ? {} : _temp,
-      singleEnter = _ref2.singleEnter,
+      allowMultiple = _ref2.allowMultiple,
       _ref2$enter = _ref2.enter,
       enter = _ref2$enter === void 0 ? true : _ref2$enter,
       _ref2$exit = _ref2.exit,
@@ -144,7 +144,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
     if (toEnter) {
       if (!enterStage) {
         transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
-        singleEnter && latestStateMap.current.forEach(function (_, _key) {
+        !allowMultiple && latestStateMap.current.forEach(function (_, _key) {
           return _key !== key && toggle(_key, false);
         });
       }
@@ -153,7 +153,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
         transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
       }
     }
-  }, [onChange, endTransition, singleEnter, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
+  }, [onChange, endTransition, allowMultiple, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
   return {
     stateMap: stateMap,
     toggle: toggle,

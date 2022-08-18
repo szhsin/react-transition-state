@@ -7,12 +7,12 @@ export type TransitionStatus =
   | 'exited'
   | 'unmounted';
 
-export interface TransitionState {
+export type TransitionState = Readonly<{
   status: TransitionStatus;
   isMounted: boolean;
   isEnter: boolean;
   isResolved: boolean;
-}
+}>;
 
 export interface TransitionOptions {
   initialEntered?: boolean;
@@ -31,7 +31,7 @@ export interface TransitionItemOptions {
 }
 
 export interface TransitionMapOptions<K> extends Omit<TransitionOptions, 'onStateChange'> {
-  singleEnter?: boolean;
+  allowMultiple?: boolean;
   onStateChange?: (event: { key: K; current: TransitionState }) => void;
 }
 

@@ -25,7 +25,7 @@ const updateState = ({ key, status, setStateMap, latestStateMap, timeoutId, onCh
 };
 
 const useTransitionMap = ({
-  singleEnter,
+  allowMultiple,
   enter = true,
   exit = true,
   preEnter,
@@ -123,7 +123,7 @@ const useTransitionMap = ({
       if (toEnter) {
         if (!enterStage) {
           transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
-          singleEnter &&
+          !allowMultiple &&
             latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
         }
       } else {
@@ -135,7 +135,7 @@ const useTransitionMap = ({
     [
       onChange,
       endTransition,
-      singleEnter,
+      allowMultiple,
       enter,
       exit,
       preEnter,
