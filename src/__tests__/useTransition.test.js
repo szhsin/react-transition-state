@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useTransition } from '../';
 
 const STATUS = Object.freeze({
@@ -123,22 +123,20 @@ test('should transition to specific state', () => {
 });
 
 test('should update state after timeout', async () => {
-  const { result, render, waitForNextUpdate } = renderTransitionHook({
+  const { result, render } = renderTransitionHook({
     initialProps: { timeout: 50, onStateChange: onChange }
   });
 
   result.toggle();
   expect(result.state).toBe(STATUS.entering);
   expect(render).toHaveBeenCalledTimes(2);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.entered);
+  await waitFor(() => expect(result.state).toBe(STATUS.entered));
   expect(onChange).toHaveBeenLastCalledWith(getOnChangeParams(STATUS.entered));
   expect(render).toHaveBeenCalledTimes(3);
 
   result.toggle();
   expect(result.state).toBe(STATUS.exiting);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.exited);
+  await waitFor(() => expect(result.state).toBe(STATUS.exited));
   expect(onChange).toHaveBeenLastCalledWith(getOnChangeParams(STATUS.exited));
   expect(render).toHaveBeenCalledTimes(5);
 
@@ -146,26 +144,28 @@ test('should update state after timeout', async () => {
   result.toggle();
   result.toggle();
   expect(result.state).toBe(STATUS.entering);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.entered);
+  await waitFor(() => expect(result.state).toBe(STATUS.entered));
   expect(render).toHaveBeenCalledTimes(9);
 
-  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+  await expect(() =>
+    waitFor(() => expect(render).toHaveBeenCalledTimes(10), { timeout: 200 })
+  ).rejects.toThrow();
 });
 
 test('should set enter and exit timeout separately', async () => {
-  const { result, render, rerender, waitForNextUpdate } = renderTransitionHook({
+  const { result, render, rerender } = renderTransitionHook({
     initialProps: { timeout: { enter: 50 } }
   });
 
   result.toggle();
   expect(result.state).toBe(STATUS.entering);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.entered);
+  await waitFor(() => expect(result.state).toBe(STATUS.entered));
 
   result.toggle();
   expect(result.state).toBe(STATUS.exiting);
-  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+  await expect(() =>
+    waitFor(() => expect(result.state).toBe(STATUS.exited), { timeout: 200 })
+  ).rejects.toThrow();
   result.endTransition();
   expect(result.state).toBe(STATUS.exited);
   expect(render).toHaveBeenCalledTimes(5);
@@ -173,14 +173,15 @@ test('should set enter and exit timeout separately', async () => {
   rerender({ timeout: { exit: 50 } });
   result.toggle();
   expect(result.state).toBe(STATUS.entering);
-  await expect(() => waitForNextUpdate({ timeout: 200 })).rejects.toThrow();
+  await expect(() =>
+    waitFor(() => expect(result.state).toBe(STATUS.entered), { timeout: 200 })
+  ).rejects.toThrow();
   result.endTransition();
   expect(result.state).toBe(STATUS.entered);
 
   result.toggle();
   expect(result.state).toBe(STATUS.exiting);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.exited);
+  await waitFor(() => expect(result.state).toBe(STATUS.exited));
   expect(render).toHaveBeenCalledTimes(10);
 });
 
@@ -214,23 +215,21 @@ test('should disable enter or exit phase', () => {
 });
 
 test('should enable preEnter or preExit state', async () => {
-  const { result, render, waitForNextUpdate } = renderTransitionHook({
+  const { result, render } = renderTransitionHook({
     initialProps: { preEnter: true, preExit: true, onStateChange: onChange }
   });
 
   result.toggle();
   expect(result.state).toBe(STATUS.preEnter);
   expect(onChange).toHaveBeenLastCalledWith(getOnChangeParams(STATUS.preEnter));
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.entering);
+  await waitFor(() => expect(result.state).toBe(STATUS.entering));
   expect(onChange).toHaveBeenLastCalledWith(getOnChangeParams(STATUS.entering));
   result.endTransition();
   expect(result.state).toBe(STATUS.entered);
 
   result.toggle();
   expect(result.state).toBe(STATUS.preExit);
-  await waitForNextUpdate();
-  expect(result.state).toBe(STATUS.exiting);
+  await waitFor(() => expect(result.state).toBe(STATUS.exiting));
   result.endTransition();
   expect(result.state).toBe(STATUS.exited);
 
