@@ -1,15 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { STATUS } from './testUtils';
 import { useTransition } from '../';
-
-const STATUS = Object.freeze({
-  preEnter: 'preEnter',
-  entering: 'entering',
-  entered: 'entered',
-  preExit: 'preExit',
-  exiting: 'exiting',
-  exited: 'exited',
-  unmounted: 'unmounted'
-});
 
 const getOnChangeParams = (status) => ({ current: expect.objectContaining({ status }) });
 
