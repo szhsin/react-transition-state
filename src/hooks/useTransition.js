@@ -1,21 +1,22 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
+import {
+  PRE_ENTER,
+  ENTERING,
+  ENTERED,
+  PRE_EXIT,
+  EXITING,
+  startOrEnd,
+  getState,
+  getEndStatus,
+  getTimeout
+} from './utils';
 
-const PRE_ENTER = 0;
-const ENTERING = 1;
-const ENTERED = 2;
-const PRE_EXIT = 3;
-const EXITING = 4;
-const EXITED = 5;
-const UNMOUNTED = 6;
-const STATES = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-
-const startOrEnd = (unmounted) => (unmounted ? UNMOUNTED : EXITED);
-
-const updateState = (state, setState, latestState, timeoutId, onChange) => {
+const updateState = (status, setState, latestState, timeoutId, onChange) => {
   clearTimeout(timeoutId.current);
+  const state = getState(status);
   setState(state);
   latestState.current = state;
-  onChange && onChange({ state: STATES[state] });
+  onChange && onChange({ current: state });
 };
 
 export const useTransition = ({
@@ -27,45 +28,26 @@ export const useTransition = ({
   initialEntered,
   mountOnEnter,
   unmountOnExit,
-  onChange
+  onStateChange: onChange
 } = {}) => {
-  const [state, setState] = useState(initialEntered ? ENTERED : startOrEnd(mountOnEnter));
+  const [state, setState] = useState(() =>
+    getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter))
+  );
   const latestState = useRef(state);
   const timeoutId = useRef();
-
-  let enterTimeout, exitTimeout;
-  if (typeof timeout === 'object') {
-    enterTimeout = timeout.enter;
-    exitTimeout = timeout.exit;
-  } else {
-    enterTimeout = exitTimeout = timeout;
-  }
+  const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const endTransition = useCallback(() => {
-    let newState;
-    switch (latestState.current) {
-      case ENTERING:
-      case PRE_ENTER:
-        newState = ENTERED;
-        break;
-
-      case EXITING:
-      case PRE_EXIT:
-        newState = startOrEnd(unmountOnExit);
-        break;
-    }
-
-    if (newState !== undefined) {
-      updateState(newState, setState, latestState, timeoutId, onChange);
-    }
+    const status = getEndStatus(latestState.current._status, unmountOnExit);
+    status && updateState(status, setState, latestState, timeoutId, onChange);
   }, [onChange, unmountOnExit]);
 
   const toggle = useCallback(
     (toEnter) => {
-      const transitState = (newState) => {
-        updateState(newState, setState, latestState, timeoutId, onChange);
+      const transitState = (status) => {
+        updateState(status, setState, latestState, timeoutId, onChange);
 
-        switch (newState) {
+        switch (status) {
           case ENTERING:
             if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
             break;
@@ -76,22 +58,19 @@ export const useTransition = ({
 
           case PRE_ENTER:
           case PRE_EXIT:
-            timeoutId.current = setTimeout(() => transitState(newState + 1), 0);
+            timeoutId.current = setTimeout(() => transitState(status + 1), 0);
             break;
         }
       };
 
-      const enterStage = latestState.current <= ENTERED;
+      const enterStage = latestState.current._status <= ENTERED;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
-        if (!enterStage) {
-          transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
-        }
+        !enterStage && transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
       } else {
-        if (enterStage) {
+        enterStage &&
           transitState(exit ? (preExit ? PRE_EXIT : EXITING) : startOrEnd(unmountOnExit));
-        }
       }
     },
     [
@@ -109,5 +88,5 @@ export const useTransition = ({
 
   useEffect(() => () => clearTimeout(timeoutId.current), []);
 
-  return [STATES[state], toggle, endTransition];
+  return [state, toggle, endTransition];
 };

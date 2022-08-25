@@ -8,15 +8,21 @@ export default [
     input: 'src/index.js',
     external: ['react'],
     plugins: [babel({ babelHelpers: 'bundled' })],
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false
+    },
     output: [
       {
-        file: 'dist/index.es.js',
+        preserveModules: true,
+        dir: 'dist/es',
         format: 'es'
       },
       {
-        file: 'dist/index.js',
+        dir: 'dist/cjs',
         format: 'cjs',
-        exports: 'named'
+        exports: 'named',
+        interop: 'default'
       }
     ]
   }
