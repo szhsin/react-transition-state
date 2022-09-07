@@ -64,7 +64,7 @@ var useTransition = function useTransition(_temp) {
       }
     };
 
-    var enterStage = latestState.current._status <= ENTERED;
+    var enterStage = latestState.current.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {

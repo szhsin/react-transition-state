@@ -16,12 +16,12 @@ export const STATUS = [
   'unmounted'
 ];
 
-export const getState = (_status) => ({
-  _status,
-  status: STATUS[_status],
-  isEnter: _status < PRE_EXIT,
-  isMounted: _status !== UNMOUNTED,
-  isResolved: _status === ENTERED || _status > EXITING
+export const getState = (status) => ({
+  _status: status,
+  status: STATUS[status],
+  isEnter: status < PRE_EXIT,
+  isMounted: status !== UNMOUNTED,
+  isResolved: status === ENTERED || status > EXITING
 });
 
 export const startOrEnd = (unmounted) => (unmounted ? UNMOUNTED : EXITED);

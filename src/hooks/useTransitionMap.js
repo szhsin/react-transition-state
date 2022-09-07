@@ -117,7 +117,7 @@ const useTransitionMap = ({
         }
       };
 
-      const enterStage = stateObj._status <= ENTERED;
+      const enterStage = stateObj.isEnter;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
