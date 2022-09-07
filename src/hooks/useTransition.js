@@ -63,7 +63,7 @@ export const useTransition = ({
         }
       };
 
-      const enterStage = latestState.current._status <= ENTERED;
+      const enterStage = latestState.current.isEnter;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {

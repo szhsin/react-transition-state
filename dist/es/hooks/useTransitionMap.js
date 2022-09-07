@@ -138,7 +138,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
       }
     };
 
-    var enterStage = stateObj._status <= ENTERED;
+    var enterStage = stateObj.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {

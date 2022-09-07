@@ -12,13 +12,13 @@ var EXITING = 4;
 var EXITED = 5;
 var UNMOUNTED = 6;
 var STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-var getState = function getState(_status) {
+var getState = function getState(status) {
   return {
-    _status: _status,
-    status: STATUS[_status],
-    isEnter: _status < PRE_EXIT,
-    isMounted: _status !== UNMOUNTED,
-    isResolved: _status === ENTERED || _status > EXITING
+    _status: status,
+    status: STATUS[status],
+    isEnter: status < PRE_EXIT,
+    isMounted: status !== UNMOUNTED,
+    isResolved: status === ENTERED || status > EXITING
   };
 };
 var startOrEnd = function startOrEnd(unmounted) {
@@ -102,7 +102,7 @@ var useTransition = function useTransition(_temp) {
       }
     };
 
-    var enterStage = latestState.current._status <= ENTERED;
+    var enterStage = latestState.current.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
@@ -256,7 +256,7 @@ var useTransitionMap = function useTransitionMap(_temp) {
       }
     };
 
-    var enterStage = stateObj._status <= ENTERED;
+    var enterStage = stateObj.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
     if (toEnter) {
