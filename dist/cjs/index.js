@@ -281,6 +281,6 @@ var useTransitionMap = function useTransitionMap(_temp) {
   };
 };
 
-exports["default"] = useTransition;
+exports.default = useTransition;
 exports.useTransition = useTransition;
 exports.useTransitionMap = useTransitionMap;
