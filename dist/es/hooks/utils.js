@@ -23,7 +23,6 @@ var getEndStatus = function getEndStatus(status, unmountOnExit) {
     case ENTERING:
     case PRE_ENTER:
       return ENTERED;
-
     case EXITING:
     case PRE_EXIT:
       return startOrEnd(unmountOnExit);
