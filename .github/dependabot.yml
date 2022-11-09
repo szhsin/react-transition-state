@@ -7,9 +7,13 @@ version: 2
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
     schedule:
       interval: 'daily'
   - package-ecosystem: 'npm'
     directory: '/example'
+    open-pull-requests-limit: 0
+    versioning-strategy: increase
     schedule:
       interval: 'daily'
