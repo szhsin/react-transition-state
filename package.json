@@ -45,7 +45,7 @@
     "@babel/preset-env": "^7.20.2",
     "@rollup/plugin-babel": "^6.0.3",
     "@testing-library/react": "^13.4.0",
-    "@types/jest": "^29.2.4",
+    "@types/jest": "^29.2.5",
     "babel-plugin-pure-annotations": "^0.1.2",
     "dtslint": "^4.1.6",
     "eslint": "^8.30.0",
