@@ -14,7 +14,7 @@ import {
 const initialStateMap = new Map();
 const initialConfigMap = new Map();
 
-const updateState = ({ key, status, setStateMap, latestStateMap, timeoutId, onChange }) => {
+const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
   clearTimeout(timeoutId);
   const state = getState(status);
   const stateMap = new Map(latestStateMap.current);
@@ -45,7 +45,7 @@ const useTransitionMap = ({
     (key, config) => {
       const { initialEntered: _initialEntered = initialEntered } = config || {};
       const status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-      updateState({ key, status, setStateMap, latestStateMap });
+      updateState(key, status, setStateMap, latestStateMap);
       configMap.current.set(key, {});
     },
     [initialEntered, mountOnEnter]
@@ -72,8 +72,8 @@ const useTransitionMap = ({
       }
 
       const { timeoutId } = configMap.current.get(key);
-      const status = getEndStatus(stateObj._status, unmountOnExit);
-      status && updateState({ key, status, setStateMap, latestStateMap, timeoutId, onChange });
+      const status = getEndStatus(stateObj._s, unmountOnExit);
+      status && updateState(key, status, setStateMap, latestStateMap, timeoutId, onChange);
     },
     [onChange, unmountOnExit]
   );
@@ -90,14 +90,7 @@ const useTransitionMap = ({
       const config = configMap.current.get(key);
 
       const transitState = (status) => {
-        updateState({
-          key,
-          status,
-          setStateMap,
-          latestStateMap,
-          timeoutId: config.timeoutId,
-          onChange
-        });
+        updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 
         switch (status) {
           case ENTERING:

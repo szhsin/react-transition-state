@@ -1,24 +1,20 @@
-var PRE_ENTER = 0;
-var ENTERING = 1;
-var ENTERED = 2;
-var PRE_EXIT = 3;
-var EXITING = 4;
-var EXITED = 5;
-var UNMOUNTED = 6;
-var STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-var getState = function getState(status) {
-  return {
-    _status: status,
-    status: STATUS[status],
-    isEnter: status < PRE_EXIT,
-    isMounted: status !== UNMOUNTED,
-    isResolved: status === ENTERED || status > EXITING
-  };
-};
-var startOrEnd = function startOrEnd(unmounted) {
-  return unmounted ? UNMOUNTED : EXITED;
-};
-var getEndStatus = function getEndStatus(status, unmountOnExit) {
+const PRE_ENTER = 0;
+const ENTERING = 1;
+const ENTERED = 2;
+const PRE_EXIT = 3;
+const EXITING = 4;
+const EXITED = 5;
+const UNMOUNTED = 6;
+const STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+const getState = status => ({
+  _s: status,
+  status: STATUS[status],
+  isEnter: status < PRE_EXIT,
+  isMounted: status !== UNMOUNTED,
+  isResolved: status === ENTERED || status > EXITING
+});
+const startOrEnd = unmounted => unmounted ? UNMOUNTED : EXITED;
+const getEndStatus = (status, unmountOnExit) => {
   switch (status) {
     case ENTERING:
     case PRE_ENTER:
@@ -28,8 +24,6 @@ var getEndStatus = function getEndStatus(status, unmountOnExit) {
       return startOrEnd(unmountOnExit);
   }
 };
-var getTimeout = function getTimeout(timeout) {
-  return typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
-};
+const getTimeout = timeout => typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 
 export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATUS, UNMOUNTED, getEndStatus, getState, getTimeout, startOrEnd };
