@@ -4,27 +4,23 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var react = require('react');
 
-var PRE_ENTER = 0;
-var ENTERING = 1;
-var ENTERED = 2;
-var PRE_EXIT = 3;
-var EXITING = 4;
-var EXITED = 5;
-var UNMOUNTED = 6;
-var STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
-var getState = function getState(status) {
-  return {
-    _status: status,
-    status: STATUS[status],
-    isEnter: status < PRE_EXIT,
-    isMounted: status !== UNMOUNTED,
-    isResolved: status === ENTERED || status > EXITING
-  };
-};
-var startOrEnd = function startOrEnd(unmounted) {
-  return unmounted ? UNMOUNTED : EXITED;
-};
-var getEndStatus = function getEndStatus(status, unmountOnExit) {
+const PRE_ENTER = 0;
+const ENTERING = 1;
+const ENTERED = 2;
+const PRE_EXIT = 3;
+const EXITING = 4;
+const EXITED = 5;
+const UNMOUNTED = 6;
+const STATUS = ['preEnter', 'entering', 'entered', 'preExit', 'exiting', 'exited', 'unmounted'];
+const getState = status => ({
+  _s: status,
+  status: STATUS[status],
+  isEnter: status < PRE_EXIT,
+  isMounted: status !== UNMOUNTED,
+  isResolved: status === ENTERED || status > EXITING
+});
+const startOrEnd = unmounted => unmounted ? UNMOUNTED : EXITED;
+const getEndStatus = (status, unmountOnExit) => {
   switch (status) {
     case ENTERING:
     case PRE_ENTER:
@@ -34,48 +30,38 @@ var getEndStatus = function getEndStatus(status, unmountOnExit) {
       return startOrEnd(unmountOnExit);
   }
 };
-var getTimeout = function getTimeout(timeout) {
-  return typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
-};
+const getTimeout = timeout => typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 
-var updateState$1 = function updateState(status, setState, latestState, timeoutId, onChange) {
+const updateState$1 = (status, setState, latestState, timeoutId, onChange) => {
   clearTimeout(timeoutId.current);
-  var state = getState(status);
+  const state = getState(status);
   setState(state);
   latestState.current = state;
   onChange && onChange({
     current: state
   });
 };
-var useTransition = function useTransition(_temp) {
-  var _ref = _temp === void 0 ? {} : _temp,
-    _ref$enter = _ref.enter,
-    enter = _ref$enter === void 0 ? true : _ref$enter,
-    _ref$exit = _ref.exit,
-    exit = _ref$exit === void 0 ? true : _ref$exit,
-    preEnter = _ref.preEnter,
-    preExit = _ref.preExit,
-    timeout = _ref.timeout,
-    initialEntered = _ref.initialEntered,
-    mountOnEnter = _ref.mountOnEnter,
-    unmountOnExit = _ref.unmountOnExit,
-    onChange = _ref.onStateChange;
-  var _useState = react.useState(function () {
-      return getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter));
-    }),
-    state = _useState[0],
-    setState = _useState[1];
-  var latestState = react.useRef(state);
-  var timeoutId = react.useRef();
-  var _getTimeout = getTimeout(timeout),
-    enterTimeout = _getTimeout[0],
-    exitTimeout = _getTimeout[1];
-  var endTransition = react.useCallback(function () {
-    var status = getEndStatus(latestState.current._status, unmountOnExit);
+const useTransition = ({
+  enter = true,
+  exit = true,
+  preEnter,
+  preExit,
+  timeout,
+  initialEntered,
+  mountOnEnter,
+  unmountOnExit,
+  onStateChange: onChange
+} = {}) => {
+  const [state, setState] = react.useState(() => getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)));
+  const latestState = react.useRef(state);
+  const timeoutId = react.useRef();
+  const [enterTimeout, exitTimeout] = getTimeout(timeout);
+  const endTransition = react.useCallback(() => {
+    const status = getEndStatus(latestState.current._s, unmountOnExit);
     status && updateState$1(status, setState, latestState, timeoutId, onChange);
   }, [onChange, unmountOnExit]);
-  var toggle = react.useCallback(function (toEnter) {
-    var transitState = function transitState(status) {
+  const toggle = react.useCallback(toEnter => {
+    const transitState = status => {
       updateState$1(status, setState, latestState, timeoutId, onChange);
       switch (status) {
         case ENTERING:
@@ -86,13 +72,11 @@ var useTransition = function useTransition(_temp) {
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          timeoutId.current = setTimeout(function () {
-            return transitState(status + 1);
-          }, 0);
+          timeoutId.current = setTimeout(() => transitState(status + 1), 0);
           break;
       }
     };
-    var enterStage = latestState.current.isEnter;
+    const enterStage = latestState.current.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
     if (toEnter) {
       !enterStage && transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
@@ -100,71 +84,50 @@ var useTransition = function useTransition(_temp) {
       enterStage && transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
     }
   }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
-  react.useEffect(function () {
-    return function () {
-      return clearTimeout(timeoutId.current);
-    };
-  }, []);
+  react.useEffect(() => () => clearTimeout(timeoutId.current), []);
   return [state, toggle, endTransition];
 };
 
-var initialStateMap = new Map();
-var initialConfigMap = new Map();
-var updateState = function updateState(_ref) {
-  var key = _ref.key,
-    status = _ref.status,
-    setStateMap = _ref.setStateMap,
-    latestStateMap = _ref.latestStateMap,
-    timeoutId = _ref.timeoutId,
-    onChange = _ref.onChange;
+const initialStateMap = new Map();
+const initialConfigMap = new Map();
+const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
   clearTimeout(timeoutId);
-  var state = getState(status);
-  var stateMap = new Map(latestStateMap.current);
+  const state = getState(status);
+  const stateMap = new Map(latestStateMap.current);
   stateMap.set(key, state);
   setStateMap(stateMap);
   latestStateMap.current = stateMap;
   onChange && onChange({
-    key: key,
+    key,
     current: state
   });
 };
-var useTransitionMap = function useTransitionMap(_temp) {
-  var _ref2 = _temp === void 0 ? {} : _temp,
-    allowMultiple = _ref2.allowMultiple,
-    _ref2$enter = _ref2.enter,
-    enter = _ref2$enter === void 0 ? true : _ref2$enter,
-    _ref2$exit = _ref2.exit,
-    exit = _ref2$exit === void 0 ? true : _ref2$exit,
-    preEnter = _ref2.preEnter,
-    preExit = _ref2.preExit,
-    timeout = _ref2.timeout,
-    initialEntered = _ref2.initialEntered,
-    mountOnEnter = _ref2.mountOnEnter,
-    unmountOnExit = _ref2.unmountOnExit,
-    onChange = _ref2.onStateChange;
-  var _useState = react.useState(initialStateMap),
-    stateMap = _useState[0],
-    setStateMap = _useState[1];
-  var latestStateMap = react.useRef(stateMap);
-  var configMap = react.useRef(initialConfigMap);
-  var _getTimeout = getTimeout(timeout),
-    enterTimeout = _getTimeout[0],
-    exitTimeout = _getTimeout[1];
-  var setItem = react.useCallback(function (key, config) {
-    var _ref3 = config || {},
-      _ref3$initialEntered = _ref3.initialEntered,
-      _initialEntered = _ref3$initialEntered === void 0 ? initialEntered : _ref3$initialEntered;
-    var status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-    updateState({
-      key: key,
-      status: status,
-      setStateMap: setStateMap,
-      latestStateMap: latestStateMap
-    });
+const useTransitionMap = ({
+  allowMultiple,
+  enter = true,
+  exit = true,
+  preEnter,
+  preExit,
+  timeout,
+  initialEntered,
+  mountOnEnter,
+  unmountOnExit,
+  onStateChange: onChange
+} = {}) => {
+  const [stateMap, setStateMap] = react.useState(initialStateMap);
+  const latestStateMap = react.useRef(stateMap);
+  const configMap = react.useRef(initialConfigMap);
+  const [enterTimeout, exitTimeout] = getTimeout(timeout);
+  const setItem = react.useCallback((key, config) => {
+    const {
+      initialEntered: _initialEntered = initialEntered
+    } = config || {};
+    const status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
+    updateState(key, status, setStateMap, latestStateMap);
     configMap.current.set(key, {});
   }, [initialEntered, mountOnEnter]);
-  var deleteItem = react.useCallback(function (key) {
-    var newStateMap = new Map(latestStateMap.current);
+  const deleteItem = react.useCallback(key => {
+    const newStateMap = new Map(latestStateMap.current);
     if (newStateMap.delete(key)) {
       setStateMap(newStateMap);
       latestStateMap.current = newStateMap;
@@ -173,67 +136,46 @@ var useTransitionMap = function useTransitionMap(_temp) {
     }
     return false;
   }, []);
-  var endTransition = react.useCallback(function (key) {
-    var stateObj = latestStateMap.current.get(key);
+  const endTransition = react.useCallback(key => {
+    const stateObj = latestStateMap.current.get(key);
     if (!stateObj) {
-      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid key: " + key);
+      process.env.NODE_ENV !== 'production' && console.error(`[React-Transition-State] invalid key: ${key}`);
       return;
     }
-    var _configMap$current$ge = configMap.current.get(key),
-      timeoutId = _configMap$current$ge.timeoutId;
-    var status = getEndStatus(stateObj._status, unmountOnExit);
-    status && updateState({
-      key: key,
-      status: status,
-      setStateMap: setStateMap,
-      latestStateMap: latestStateMap,
-      timeoutId: timeoutId,
-      onChange: onChange
-    });
+    const {
+      timeoutId
+    } = configMap.current.get(key);
+    const status = getEndStatus(stateObj._s, unmountOnExit);
+    status && updateState(key, status, setStateMap, latestStateMap, timeoutId, onChange);
   }, [onChange, unmountOnExit]);
-  var toggle = react.useCallback(function (key, toEnter) {
-    var stateObj = latestStateMap.current.get(key);
+  const toggle = react.useCallback((key, toEnter) => {
+    const stateObj = latestStateMap.current.get(key);
     if (!stateObj) {
-      process.env.NODE_ENV !== 'production' && console.error("[React-Transition-State] invalid key: " + key);
+      process.env.NODE_ENV !== 'production' && console.error(`[React-Transition-State] invalid key: ${key}`);
       return;
     }
-    var config = configMap.current.get(key);
-    var transitState = function transitState(status) {
-      updateState({
-        key: key,
-        status: status,
-        setStateMap: setStateMap,
-        latestStateMap: latestStateMap,
-        timeoutId: config.timeoutId,
-        onChange: onChange
-      });
+    const config = configMap.current.get(key);
+    const transitState = status => {
+      updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
       switch (status) {
         case ENTERING:
-          if (enterTimeout >= 0) config.timeoutId = setTimeout(function () {
-            return endTransition(key);
-          }, enterTimeout);
+          if (enterTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
           break;
         case EXITING:
-          if (exitTimeout >= 0) config.timeoutId = setTimeout(function () {
-            return endTransition(key);
-          }, exitTimeout);
+          if (exitTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          config.timeoutId = setTimeout(function () {
-            return transitState(status + 1);
-          }, 0);
+          config.timeoutId = setTimeout(() => transitState(status + 1), 0);
           break;
       }
     };
-    var enterStage = stateObj.isEnter;
+    const enterStage = stateObj.isEnter;
     if (typeof toEnter !== 'boolean') toEnter = !enterStage;
     if (toEnter) {
       if (!enterStage) {
         transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
-        !allowMultiple && latestStateMap.current.forEach(function (_, _key) {
-          return _key !== key && toggle(_key, false);
-        });
+        !allowMultiple && latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
       }
     } else {
       if (enterStage) {
@@ -242,11 +184,11 @@ var useTransitionMap = function useTransitionMap(_temp) {
     }
   }, [onChange, endTransition, allowMultiple, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
   return {
-    stateMap: stateMap,
-    toggle: toggle,
-    endTransition: endTransition,
-    setItem: setItem,
-    deleteItem: deleteItem
+    stateMap,
+    toggle,
+    endTransition,
+    setItem,
+    deleteItem
   };
 };
 
