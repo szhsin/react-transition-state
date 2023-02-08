@@ -38,7 +38,7 @@ export const useTransition = ({
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const endTransition = useCallback(() => {
-    const status = getEndStatus(latestState.current._status, unmountOnExit);
+    const status = getEndStatus(latestState.current._s, unmountOnExit);
     status && updateState(status, setState, latestState, timeoutId, onChange);
   }, [onChange, unmountOnExit]);
 

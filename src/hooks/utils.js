@@ -17,7 +17,7 @@ export const STATUS = [
 ];
 
 export const getState = (status) => ({
-  _status: status,
+  _s: status,
   status: STATUS[status],
   isEnter: status < PRE_EXIT,
   isMounted: status !== UNMOUNTED,
