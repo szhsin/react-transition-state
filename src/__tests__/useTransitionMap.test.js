@@ -25,6 +25,12 @@ class Result {
     });
   }
 
+  toggleAll(toEnter) {
+    act(() => {
+      this.result.current.toggleAll(toEnter);
+    });
+  }
+
   endTransition(key = 1) {
     act(() => {
       this.result.current.endTransition(key);
@@ -359,4 +365,69 @@ test('should allow mutiple items to enter', () => {
   expect(result.getStatus(1)).toBe(STATUS.entering);
   expect(result.getStatus(2)).toBe(STATUS.exited);
   expect(result.getStatus(3)).toBe(STATUS.entering);
+});
+
+test('should toggle all items when allowing multiple', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { enter: false, exit: false, allowMultiple: true, onStateChange: onChange }
+  });
+  result.setItem(1, { initialEntered: true });
+  result.setItem(2);
+  result.setItem(3, { initialEntered: true });
+  expect(result.getStatus(1)).toBe(STATUS.entered);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.entered);
+
+  result.toggleAll();
+  expect(result.getStatus(1)).toBe(STATUS.exited);
+  expect(result.getStatus(2)).toBe(STATUS.entered);
+  expect(result.getStatus(3)).toBe(STATUS.exited);
+
+  result.toggleAll(true);
+  expect(result.getStatus(1)).toBe(STATUS.entered);
+  expect(result.getStatus(2)).toBe(STATUS.entered);
+  expect(result.getStatus(3)).toBe(STATUS.entered);
+
+  result.toggleAll(false);
+  expect(result.getStatus(1)).toBe(STATUS.exited);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.exited);
+
+  expect(onChange).toHaveBeenNthCalledWith(1, getOnChangeParams(STATUS.exited, 1));
+  expect(onChange).toHaveBeenNthCalledWith(2, getOnChangeParams(STATUS.entered, 2));
+  expect(onChange).toHaveBeenNthCalledWith(3, getOnChangeParams(STATUS.exited, 3));
+  expect(onChange).toHaveBeenCalledTimes(8);
+  expect(render).toHaveBeenCalledTimes(7);
+});
+
+test('should only close all items when not allowing multiple', () => {
+  const { result, render } = renderTransitionHook({
+    initialProps: { enter: false, exit: false, onStateChange: onChange }
+  });
+  result.setItem(1, { initialEntered: true });
+  result.setItem(2);
+  result.setItem(3, { initialEntered: true });
+  expect(result.getStatus(1)).toBe(STATUS.entered);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.entered);
+
+  result.toggleAll();
+  expect(result.getStatus(1)).toBe(STATUS.entered);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.entered);
+
+  result.toggleAll(true);
+  expect(result.getStatus(1)).toBe(STATUS.entered);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.entered);
+
+  result.toggleAll(false);
+  expect(result.getStatus(1)).toBe(STATUS.exited);
+  expect(result.getStatus(2)).toBe(STATUS.exited);
+  expect(result.getStatus(3)).toBe(STATUS.exited);
+
+  expect(onChange).toHaveBeenNthCalledWith(1, getOnChangeParams(STATUS.exited, 1));
+  expect(onChange).toHaveBeenNthCalledWith(2, getOnChangeParams(STATUS.exited, 3));
+  expect(onChange).toHaveBeenCalledTimes(2);
+  expect(render).toHaveBeenCalledTimes(5);
 });

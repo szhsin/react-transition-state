@@ -40,6 +40,7 @@ export type TransitionResult = [TransitionState, (toEnter?: boolean) => void, ()
 export interface TransitionMapResult<K> {
   stateMap: ReadonlyMap<K, TransitionState>;
   toggle: (key: K, toEnter?: boolean) => void;
+  toggleAll: (toEnter?: boolean) => void;
   endTransition: (key: K) => void;
   setItem: (key: K, options?: TransitionItemOptions) => void;
   deleteItem: (key: K) => boolean;
