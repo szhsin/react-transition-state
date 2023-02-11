@@ -139,7 +139,15 @@ const useTransitionMap = ({
     ]
   );
 
-  return { stateMap, toggle, endTransition, setItem, deleteItem };
+  const toggleAll = useCallback(
+    (toEnter) => {
+      if (!allowMultiple && toEnter !== false) return;
+      for (const key of latestStateMap.current.keys()) toggle(key, toEnter);
+    },
+    [allowMultiple, toggle]
+  );
+
+  return { stateMap, toggle, toggleAll, endTransition, setItem, deleteItem };
 };
 
 export { useTransitionMap };
