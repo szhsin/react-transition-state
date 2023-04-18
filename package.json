@@ -59,7 +59,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.11",
-    "rollup": "^3.18.0",
+    "rollup": "^3.20.5",
     "typescript": "^4.9.5"
   }
 }
