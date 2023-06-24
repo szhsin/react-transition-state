@@ -60,6 +60,6 @@
     "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.11",
     "rollup": "^3.23.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }
