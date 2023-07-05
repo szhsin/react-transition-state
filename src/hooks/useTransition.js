@@ -8,7 +8,8 @@ import {
   startOrEnd,
   getState,
   getEndStatus,
-  getTimeout
+  getTimeout,
+  nextTick
 } from './utils';
 
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
@@ -58,7 +59,7 @@ export const useTransition = ({
 
           case PRE_ENTER:
           case PRE_EXIT:
-            timeoutId.current = setTimeout(() => transitState(status + 1), 0);
+            timeoutId.current = nextTick(transitState, status);
             break;
         }
       };

@@ -8,7 +8,8 @@ import {
   startOrEnd,
   getState,
   getEndStatus,
-  getTimeout
+  getTimeout,
+  nextTick
 } from './utils';
 
 const initialStateMap = new Map();
@@ -105,7 +106,7 @@ const useTransitionMap = ({
 
           case PRE_ENTER:
           case PRE_EXIT:
-            config.timeoutId = setTimeout(() => transitState(status + 1), 0);
+            config.timeoutId = nextTick(transitState, status);
             break;
         }
       };
