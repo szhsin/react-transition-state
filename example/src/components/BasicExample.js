@@ -3,7 +3,7 @@ import useTransition from 'react-transition-state';
 
 function BasicExample() {
   const [unmountOnExit, setUnmountOnExit] = useState(true);
-  const [state, toggle] = useTransition({
+  const [{ status: state, isMounted }, toggle] = useTransition({
     timeout: 500,
     initialEntered: true,
     preEnter: true,
@@ -31,9 +31,7 @@ function BasicExample() {
           out of DOM.
         </em>
       </div>
-      {state !== 'unmounted' && (
-        <div className={`basic-transition ${state}`}>React transition state</div>
-      )}
+      {isMounted && <div className={`basic-transition ${state}`}>React transition state</div>}
       <a className="code-sandbox" href="https://codesandbox.io/s/react-transition-basic-100io">
         Edit on CodeSandbox
       </a>
