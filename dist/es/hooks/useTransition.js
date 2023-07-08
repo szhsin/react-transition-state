@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { getState, ENTERED, startOrEnd, getTimeout, getEndStatus, PRE_ENTER, ENTERING, PRE_EXIT, EXITING } from './utils.js';
+import { getState, ENTERED, startOrEnd, getEndStatus, PRE_EXIT, EXITING, getTimeout, nextTick, PRE_ENTER, ENTERING } from './utils.js';
 
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
   clearTimeout(timeoutId.current);
@@ -41,7 +41,7 @@ const useTransition = ({
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          timeoutId.current = setTimeout(() => transitState(status + 1), 0);
+          timeoutId.current = nextTick(transitState, status);
           break;
       }
     };

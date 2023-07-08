@@ -25,5 +25,9 @@ const getEndStatus = (status, unmountOnExit) => {
   }
 };
 const getTimeout = timeout => typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
+const nextTick = (transitState, status) => setTimeout(() => {
+  // Reading document.body.offsetTop can force browser to repaint before transition to the next state
+  isNaN(document.body.offsetTop) || transitState(status + 1);
+}, 0);
 
-export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATUS, UNMOUNTED, getEndStatus, getState, getTimeout, startOrEnd };
+export { ENTERED, ENTERING, EXITED, EXITING, PRE_ENTER, PRE_EXIT, STATUS, UNMOUNTED, getEndStatus, getState, getTimeout, nextTick, startOrEnd };

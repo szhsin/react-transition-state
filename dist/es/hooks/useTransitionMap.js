@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { getTimeout, ENTERED, startOrEnd, getEndStatus, PRE_ENTER, ENTERING, PRE_EXIT, EXITING, getState } from './utils.js';
+import { ENTERED, startOrEnd, getEndStatus, PRE_EXIT, EXITING, getTimeout, nextTick, PRE_ENTER, ENTERING, getState } from './utils.js';
 
 const initialStateMap = new Map();
 const initialConfigMap = new Map();
@@ -79,7 +79,7 @@ const useTransitionMap = ({
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          config.timeoutId = setTimeout(() => transitState(status + 1), 0);
+          config.timeoutId = nextTick(transitState, status);
           break;
       }
     };
