@@ -24,23 +24,22 @@ const Box = styled.div`
 `;
 
 function StyledExample() {
-  const [state, toggle] = useTransition({
+  const [{ status: state, isMounted }, toggle] = useTransition({
     timeout: 500,
     mountOnEnter: true,
     unmountOnExit: true,
     preEnter: true
   });
 
-  const showButton = state === 'unmounted';
   return (
     <Container>
       <h1>styled-components example</h1>
-      {showButton && (
+      {!isMounted && (
         <button className="btn" onClick={() => toggle(true)}>
           Show Message
         </button>
       )}
-      {!showButton && (
+      {isMounted && (
         <Box state={state}>
           <h2>state: {state}</h2>
           <p>This message is being transitioned in and out of the DOM.</p>

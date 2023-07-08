@@ -40,3 +40,9 @@ export const getEndStatus = (status, unmountOnExit) => {
 
 export const getTimeout = (timeout) =>
   typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
+
+export const nextTick = (transitState, status) =>
+  setTimeout(() => {
+    // Reading document.body.offsetTop can force browser to repaint before transition to the next state
+    isNaN(document.body.offsetTop) || transitState(status + 1);
+  }, 0);

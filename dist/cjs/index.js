@@ -31,6 +31,10 @@ const getEndStatus = (status, unmountOnExit) => {
   }
 };
 const getTimeout = timeout => typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
+const nextTick = (transitState, status) => setTimeout(() => {
+  // Reading document.body.offsetTop can force browser to repaint before transition to the next state
+  isNaN(document.body.offsetTop) || transitState(status + 1);
+}, 0);
 
 const updateState$1 = (status, setState, latestState, timeoutId, onChange) => {
   clearTimeout(timeoutId.current);
@@ -72,7 +76,7 @@ const useTransition = ({
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          timeoutId.current = setTimeout(() => transitState(status + 1), 0);
+          timeoutId.current = nextTick(transitState, status);
           break;
       }
     };
@@ -166,7 +170,7 @@ const useTransitionMap = ({
           break;
         case PRE_ENTER:
         case PRE_EXIT:
-          config.timeoutId = setTimeout(() => transitState(status + 1), 0);
+          config.timeoutId = nextTick(transitState, status);
           break;
       }
     };
