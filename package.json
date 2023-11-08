@@ -34,7 +34,7 @@
     "lint:fix": "eslint --fix .",
     "pret": "prettier -c .",
     "pret:fix": "prettier -w .",
-    "build": "run-s clean lint pret bundle types"
+    "build": "run-s clean lint pret bundle"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
