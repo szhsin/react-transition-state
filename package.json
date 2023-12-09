@@ -41,7 +41,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
+    "@babel/core": "^7.23.5",
     "@babel/preset-env": "^7.23.5",
     "@rollup/plugin-babel": "^6.0.4",
     "@testing-library/react": "^14.1.2",
