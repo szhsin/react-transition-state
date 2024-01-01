@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
-    "@babel/preset-env": "^7.23.6",
+    "@babel/preset-env": "^7.23.7",
     "@rollup/plugin-babel": "^6.0.4",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.11",
