@@ -84,8 +84,8 @@ import { useTransition } from 'react-transition-state';
 const Box = styled.div`
   transition: all 500ms;
 
-  ${({ status }) =>
-    (status === 'preEnter' || status === 'exiting') &&
+  ${({ $status }) =>
+    ($status === 'preEnter' || $status === 'exiting') &&
     `
       opacity: 0;
       transform: scale(0.9);
@@ -104,7 +104,7 @@ function StyledExample() {
     <div>
       {!isMounted && <button onClick={() => toggle(true)}>Show Message</button>}
       {isMounted && (
-        <Box status={status}>
+        <Box $status={status}>
           <p>This message is being transitioned in and out of the DOM.</p>
           <button onClick={() => toggle(false)}>Close</button>
         </Box>
