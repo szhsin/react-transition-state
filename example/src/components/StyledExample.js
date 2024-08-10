@@ -15,8 +15,8 @@ const Box = styled.div`
   margin: 0 auto;
   border-radius: 0.5rem;
 
-  ${({ state }) =>
-    (state === 'preEnter' || state === 'exiting') &&
+  ${({ $state }) =>
+    ($state === 'preEnter' || $state === 'exiting') &&
     `
       opacity: 0;
       transform: scale(0.9);
@@ -40,7 +40,7 @@ function StyledExample() {
         </button>
       )}
       {isMounted && (
-        <Box state={state}>
+        <Box $state={state}>
           <h2>state: {state}</h2>
           <p>This message is being transitioned in and out of the DOM.</p>
           <button className="btn" onClick={() => toggle(false)}>

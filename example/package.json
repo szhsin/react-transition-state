@@ -8,7 +8,7 @@
     "react-dom": "file:../node_modules/react-dom",
     "react-scripts": "5.0.1",
     "react-transition-state": "file:..",
-    "styled-components": "^5.3.5",
+    "styled-components": "^6.1.12",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
