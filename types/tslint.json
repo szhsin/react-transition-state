@@ -1,7 +1,0 @@
-{
-  "extends": "dtslint/dtslint.json",
-  "rules": {
-    "prefer-declare-function": false,
-    "no-unnecessary-generics": false
-  }
-}
