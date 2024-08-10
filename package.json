@@ -28,13 +28,12 @@
     "bundle": "rollup -c",
     "test": "jest",
     "eg": "npm start --prefix example",
-    "types": "dtslint --localTs node_modules/typescript/lib types",
-    "tsc": "cd types && tsc",
+    "types": "cd types && tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "pret": "prettier -c .",
     "pret:fix": "prettier -w .",
-    "build": "run-s pret clean lint bundle"
+    "build": "run-s pret clean lint types bundle"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
