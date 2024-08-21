@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useTransition } from 'react-transition-state';
+import { CodeSandbox } from './CodeSandbox';
 
 const Container = styled.div`
   margin: 1rem;
-  margin-top: 200px;
+  margin-top: 150px;
 `;
 
 const Box = styled.div`
@@ -15,16 +16,16 @@ const Box = styled.div`
   margin: 0 auto;
   border-radius: 0.5rem;
 
-  ${({ $state }) =>
-    ($state === 'preEnter' || $state === 'exiting') &&
+  ${({ $status }) =>
+    ($status === 'preEnter' || $status === 'exiting') &&
     `
       opacity: 0;
       transform: scale(0.9);
     `}
 `;
 
-function StyledExample() {
-  const [{ status: state, isMounted }, toggle] = useTransition({
+const StyledExample = () => {
+  const [{ status, isMounted }, toggle] = useTransition({
     timeout: 500,
     mountOnEnter: true,
     unmountOnExit: true,
@@ -40,19 +41,17 @@ function StyledExample() {
         </button>
       )}
       {isMounted && (
-        <Box $state={state}>
-          <h2>state: {state}</h2>
+        <Box $status={status}>
+          <h2>status: {status}</h2>
           <p>This message is being transitioned in and out of the DOM.</p>
           <button className="btn" onClick={() => toggle(false)}>
             Close
           </button>
         </Box>
       )}
-      <a className="code-sandbox" href="https://codesandbox.io/s/react-transition-styled-3id7q">
-        Edit on CodeSandbox
-      </a>
+      <CodeSandbox href="https://codesandbox.io/s/react-transition-styled-3id7q" />
     </Container>
   );
-}
+};
 
-export default StyledExample;
+export { StyledExample };

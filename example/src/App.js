@@ -1,5 +1,6 @@
-import BasicExample from './components/BasicExample';
-import StyledExample from './components/StyledExample';
+import { BasicExample } from './components/BasicExample';
+import { StyledExample } from './components/StyledExample';
+import { SwitchExample } from './components/SwitchExample';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       </a>
       <BasicExample />
       <StyledExample />
+      <SwitchExample />
     </div>
   );
 }

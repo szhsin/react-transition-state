@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import useTransition from 'react-transition-state';
+import { CodeSandbox } from './CodeSandbox';
 
-function BasicExample() {
+const BasicExample = () => {
   const [unmountOnExit, setUnmountOnExit] = useState(true);
-  const [{ status: state, isMounted }, toggle] = useTransition({
+  const [{ status, isMounted }, toggle] = useTransition({
     timeout: 500,
     initialEntered: true,
     preEnter: true,
@@ -12,9 +13,9 @@ function BasicExample() {
 
   return (
     <div className="basic-example">
-      <h1>Basic example</h1>
+      <h1>CSS example</h1>
       <div className="basic-console">
-        <div className="basic-state">state: {state}</div>
+        <div className="basic-status">status: {status}</div>
         <label>
           Unmount after hiding
           <input
@@ -24,19 +25,17 @@ function BasicExample() {
           />
         </label>
         <button className="btn" onClick={() => toggle()}>
-          {state === 'entering' || state === 'entered' ? 'Hide' : 'Show'}
+          {status === 'entering' || status === 'entered' ? 'Hide' : 'Show'}
         </button>
         <em className="tips">
           Tip: open the browser dev tools to verify that the following message is being moved in and
           out of DOM.
         </em>
       </div>
-      {isMounted && <div className={`basic-transition ${state}`}>React transition state</div>}
-      <a className="code-sandbox" href="https://codesandbox.io/s/react-transition-basic-100io">
-        Edit on CodeSandbox
-      </a>
+      {isMounted && <div className={`basic-transition ${status}`}>React transition state</div>}
+      <CodeSandbox href="https://codesandbox.io/s/react-transition-basic-100io" />
     </div>
   );
-}
+};
 
-export default BasicExample;
+export { BasicExample };

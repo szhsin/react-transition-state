@@ -1,5 +1,9 @@
 # React-Transition-State
 
+> Zero dependency React transition state machine
+
+**[Live Demo](https://szhsin.github.io/react-transition-state/)**
+
 [![NPM](https://img.shields.io/npm/v/react-transition-state.svg)](https://www.npmjs.com/package/react-transition-state) [![NPM](https://img.shields.io/npm/dm/react-transition-state)](https://www.npmjs.com/package/react-transition-state) [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-state)](https://bundlephobia.com/package/react-transition-state) [![Known Vulnerabilities](https://snyk.io/test/github/szhsin/react-transition-state/badge.svg)](https://snyk.io/test/github/szhsin/react-transition-state)
 
 ## Features
@@ -126,6 +130,17 @@ export default StyledExample;
 
 <br/>
 
+### Switch transition
+
+You can create switch transition effects using one of the provided hooks,
+
+- `useTransition` if the number of elements participating in the switch transition is static.
+- `useTransitionMap` if the number of elements participating in the switch transition is dynamic and only known at runtime.
+
+**[Edit on CodeSandbox](https://codesandbox.io/p/sandbox/react-switch-transition-x87jt8)**
+
+<br/>
+
 ### Perform appearing transition when page loads or a component mounts
 
 You can toggle on transition with the `useEffect` hook.
@@ -208,9 +223,9 @@ The `useTransition` Hook returns a tuple of values in the following order:
 
 3. endTransition: `() => void`
 
-- Call this function to stop transition which will turn state into 'entered' or 'exited'.
-- You will normally call this function in the `onAnimationEnd` or `onTransitionEnd` event.
-- You need to either call this function explicitly in your code or set a timeout value in Hook options.
+- Call this function to stop a transition which will turn the state into 'entered' or 'exited'.
+- You don't need to call this function explicitly if a timeout value is provided in the hook options.
+- You can call this function explicitly in the `onAnimationEnd` or `onTransitionEnd` event.
 
 <br/>
 
