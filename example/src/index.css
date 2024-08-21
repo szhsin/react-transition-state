@@ -6,7 +6,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #18191a;
   color: #cad1d8;
-  padding-bottom: 500px;
+  padding-bottom: 300px;
 }
 
 code {
@@ -25,6 +25,10 @@ code {
   background-color: #333;
 }
 
+h1 {
+  color: goldenrod;
+}
+
 a {
   text-decoration: none;
   color: #69a6f8;
@@ -39,7 +43,7 @@ a:hover {
   display: block;
   font-weight: 800;
   padding: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .btn {
@@ -76,14 +80,15 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 3rem 0;
+  margin: 3rem 0 2rem;
 }
 
 .basic-console em {
   max-width: 26rem;
+  margin: 0;
 }
 
-.basic-state {
+.basic-status {
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -96,6 +101,7 @@ a:hover {
   font-size: 3rem;
   font-weight: 800;
   transition: all 0.5s;
+  color: #bbb;
 }
 
 .basic-transition.preEnter,
@@ -106,4 +112,31 @@ a:hover {
 
 .basic-transition.exited {
   display: none;
+}
+
+.switch-example {
+  margin-top: 150px;
+}
+
+.switch-container {
+  display: flex;
+  justify-content: center;
+  min-height: 40px;
+}
+
+.switch {
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  position: absolute;
+}
+
+.switch.preEnter {
+  opacity: 0;
+  transform: translateX(-200%);
+}
+
+.switch.exiting {
+  opacity: 0;
+  transform: translateX(200%);
 }
