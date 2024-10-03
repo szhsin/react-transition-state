@@ -40,7 +40,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
+    "@babel/core": "^7.25.7",
     "@babel/preset-env": "^7.25.4",
     "@eslint/compat": "^1.1.1",
     "@rollup/plugin-babel": "^6.0.4",
