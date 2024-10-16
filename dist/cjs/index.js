@@ -92,8 +92,6 @@ const useTransition = ({
   return [state, toggle, endTransition];
 };
 
-const initialStateMap = new Map();
-const initialConfigMap = new Map();
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
   clearTimeout(timeoutId);
   const state = getState(status);
@@ -118,9 +116,9 @@ const useTransitionMap = ({
   unmountOnExit,
   onStateChange: onChange
 } = {}) => {
-  const [stateMap, setStateMap] = react.useState(initialStateMap);
+  const [stateMap, setStateMap] = react.useState(new Map());
   const latestStateMap = react.useRef(stateMap);
-  const configMap = react.useRef(initialConfigMap);
+  const configMap = react.useRef(new Map());
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
   const setItem = react.useCallback((key, config) => {
     const {

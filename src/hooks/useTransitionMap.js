@@ -12,9 +12,6 @@ import {
   nextTick
 } from './utils';
 
-const initialStateMap = new Map();
-const initialConfigMap = new Map();
-
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
   clearTimeout(timeoutId);
   const state = getState(status);
@@ -37,9 +34,9 @@ const useTransitionMap = ({
   unmountOnExit,
   onStateChange: onChange
 } = {}) => {
-  const [stateMap, setStateMap] = useState(initialStateMap);
+  const [stateMap, setStateMap] = useState(new Map());
   const latestStateMap = useRef(stateMap);
-  const configMap = useRef(initialConfigMap);
+  const configMap = useRef(new Map());
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const setItem = useCallback(
