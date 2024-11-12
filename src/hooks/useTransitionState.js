@@ -20,7 +20,7 @@ const updateState = (status, setState, latestState, timeoutId, onChange) => {
   onChange && onChange({ current: state });
 };
 
-export const useTransition = ({
+export const useTransitionState = ({
   enter = true,
   exit = true,
   preEnter,

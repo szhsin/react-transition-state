@@ -46,8 +46,18 @@ export interface TransitionMapResult<K> {
   deleteItem: (key: K) => boolean;
 }
 
-export const useTransition: (options?: TransitionOptions) => TransitionResult;
+export const useTransitionState: (options?: TransitionOptions) => TransitionResult;
 
 export const useTransitionMap: <K>(options?: TransitionMapOptions<K>) => TransitionMapResult<K>;
 
-export default useTransition;
+export {
+  /**
+   * @deprecated The `useTransition` alias will be removed in v3.0.0. Use `useTransitionState` instead.
+   */
+  useTransitionState as useTransition
+};
+
+/**
+ * @deprecated The default export will be removed in v3.0.0. Use the named export `useTransitionState` instead.
+ */
+export default useTransitionState;

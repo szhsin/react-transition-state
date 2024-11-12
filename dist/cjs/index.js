@@ -45,7 +45,7 @@ const updateState$1 = (status, setState, latestState, timeoutId, onChange) => {
     current: state
   });
 };
-const useTransition = ({
+const useTransitionState = ({
   enter = true,
   exit = true,
   preEnter,
@@ -199,6 +199,7 @@ const useTransitionMap = ({
   };
 };
 
-exports.default = useTransition;
-exports.useTransition = useTransition;
+exports.default = useTransitionState;
+exports.useTransition = useTransitionState;
 exports.useTransitionMap = useTransitionMap;
+exports.useTransitionState = useTransitionState;

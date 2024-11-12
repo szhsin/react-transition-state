@@ -1,2 +1,6 @@
-export { useTransition as default, useTransition } from './hooks/useTransition';
+export {
+  useTransitionState,
+  useTransitionState as useTransition,
+  useTransitionState as default
+} from './hooks/useTransitionState';
 export { useTransitionMap } from './hooks/useTransitionMap';
