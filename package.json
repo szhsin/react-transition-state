@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "Zero dependency React transition state machine.",
   "author": "Zheng Song",
   "license": "MIT",

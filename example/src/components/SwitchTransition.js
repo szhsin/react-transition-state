@@ -1,7 +1,7 @@
-import { useTransition } from 'react-transition-state';
+import { useTransitionState } from 'react-transition-state';
 
 // Ideal for creating switch transition for a small number of elements
-// Use `useTransition` hook once for each element in the switch transition
+// Use `useTransitionState` hook once for each element in the switch transition
 export const SwitchTransition = () => {
   const transitionProps = {
     timeout: 300,
@@ -10,11 +10,11 @@ export const SwitchTransition = () => {
     preEnter: true
   };
 
-  const [state1, toggle1] = useTransition({
+  const [state1, toggle1] = useTransitionState({
     ...transitionProps,
     initialEntered: true
   });
-  const [state2, toggle2] = useTransition(transitionProps);
+  const [state2, toggle2] = useTransitionState(transitionProps);
   const toggle = () => {
     toggle1();
     toggle2();

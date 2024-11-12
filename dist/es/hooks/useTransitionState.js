@@ -10,7 +10,7 @@ const updateState = (status, setState, latestState, timeoutId, onChange) => {
     current: state
   });
 };
-const useTransition = ({
+const useTransitionState = ({
   enter = true,
   exit = true,
   preEnter,
@@ -57,4 +57,4 @@ const useTransition = ({
   return [state, toggle, endTransition];
 };
 
-export { useTransition };
+export { useTransitionState };

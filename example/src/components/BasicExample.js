@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import useTransition from 'react-transition-state';
+import { useTransitionState } from 'react-transition-state';
 import { CodeSandbox } from './CodeSandbox';
 
 const BasicExample = () => {
   const [unmountOnExit, setUnmountOnExit] = useState(true);
-  const [{ status, isMounted }, toggle] = useTransition({
+  const [{ status, isMounted }, toggle] = useTransitionState({
     timeout: 500,
     initialEntered: true,
     preEnter: true,

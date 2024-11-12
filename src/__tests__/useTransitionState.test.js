@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { STATUS } from './testUtils';
-import { useTransition } from '../';
+import { useTransitionState } from '../';
 
 const getOnChangeParams = (status) => ({ current: expect.objectContaining({ status }) });
 
@@ -42,7 +42,7 @@ const renderTransitionHook = (options) => {
   const render = jest.fn();
   const { result, ...rest } = renderHook((props) => {
     render();
-    return useTransition(props);
+    return useTransitionState(props);
   }, options);
 
   return { result: new Result(result), render, ...rest };

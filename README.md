@@ -22,7 +22,7 @@ Inspired by the [React Transition Group](https://github.com/reactjs/react-transi
 
 ## State diagram
 
-![state-diagram](https://user-images.githubusercontent.com/41896553/142855447-cb8d8730-f8fb-4296-a3db-d1523b0fa2d9.png) The `initialEntered` and `mountOnEnter` props are omitted from the diagram to keep it less convoluted. [Please read more details at the API section](#usetransition-hook).
+![state-diagram](https://user-images.githubusercontent.com/41896553/142855447-cb8d8730-f8fb-4296-a3db-d1523b0fa2d9.png) The `initialEntered` and `mountOnEnter` props are omitted from the diagram to keep it less convoluted. [Please read more details at the API section](#usetransitionstate-hook).
 
 <br/>
 
@@ -43,11 +43,10 @@ yarn add react-transition-state
 ### CSS example
 
 ```jsx
-import { useTransition } from 'react-transition-state';
-/* or import useTransition from 'react-transition-state'; */
+import { useTransitionState } from 'react-transition-state';
 
 function Example() {
-  const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
+  const [state, toggle] = useTransitionState({ timeout: 750, preEnter: true });
   return (
     <div>
       <button onClick={() => toggle()}>toggle</button>
@@ -83,7 +82,7 @@ export default Example;
 
 ```jsx
 import styled from 'styled-components';
-import { useTransition } from 'react-transition-state';
+import { useTransitionState } from 'react-transition-state';
 
 const Box = styled.div`
   transition: all 500ms;
@@ -97,7 +96,7 @@ const Box = styled.div`
 `;
 
 function StyledExample() {
-  const [{ status, isMounted }, toggle] = useTransition({
+  const [{ status, isMounted }, toggle] = useTransitionState({
     timeout: 500,
     mountOnEnter: true,
     unmountOnExit: true,
@@ -134,7 +133,7 @@ export default StyledExample;
 
 You can create switch transition effects using one of the provided hooks,
 
-- `useTransition` if the number of elements participating in the switch transition is static.
+- `useTransitionState` if the number of elements participating in the switch transition is static.
 - `useTransitionMap` if the number of elements participating in the switch transition is dynamic and only known at runtime.
 
 **[Edit on CodeSandbox](https://codesandbox.io/p/sandbox/react-switch-transition-x87jt8)**
@@ -173,10 +172,10 @@ This [CodeSandbox example](https://codesandbox.io/s/react-transition-state-vs-gr
 
 ## API
 
-### `useTransition` Hook
+### `useTransitionState` Hook
 
 ```typescript
-function useTransition(
+function useTransitionState(
   options?: TransitionOptions
 ): [TransitionState, (toEnter?: boolean) => void, () => void];
 ```
@@ -197,7 +196,7 @@ function useTransition(
 
 #### Return value
 
-The `useTransition` Hook returns a tuple of values in the following order:
+The `useTransitionState` Hook returns a tuple of values in the following order:
 
 1. state:
 
@@ -231,11 +230,11 @@ The `useTransition` Hook returns a tuple of values in the following order:
 
 ### `useTransitionMap` Hook
 
-It's similar to the `useTransition` Hook except that it manages multiple states in a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) structure instead of a single state.
+It's similar to the `useTransitionState` Hook except that it manages multiple states in a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) structure instead of a single state.
 
 #### Options
 
-It accepts all options as `useTransition` and the following ones:
+It accepts all options as `useTransitionState` and the following ones:
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
