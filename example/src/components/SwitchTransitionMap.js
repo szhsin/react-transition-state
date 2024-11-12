@@ -3,7 +3,7 @@ import { useTransitionMap } from 'react-transition-state';
 
 // Creating switch transitions for a large number of elements,
 // or the number of elements is only known at runtime.
-// `useTransition` doesn't suffice as React hook has the limitation that it cannot be called in a loop
+// `useTransitionState` doesn't suffice as React hook has the limitation that it cannot be called in a loop
 const NUMBER_OF_BUTTONS = 5;
 const buttonArray = new Array(NUMBER_OF_BUTTONS).fill(0).map((_, i) => `Button ${i + 1}`);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTransition } from 'react-transition-state';
+import { useTransitionState } from 'react-transition-state';
 import { CodeSandbox } from './CodeSandbox';
 
 const Container = styled.div`
@@ -25,7 +25,7 @@ const Box = styled.div`
 `;
 
 const StyledExample = () => {
-  const [{ status, isMounted }, toggle] = useTransition({
+  const [{ status, isMounted }, toggle] = useTransitionState({
     timeout: 500,
     mountOnEnter: true,
     unmountOnExit: true,
