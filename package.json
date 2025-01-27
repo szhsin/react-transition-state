@@ -47,7 +47,7 @@
     "@testing-library/react": "^16.1.0",
     "@types/jest": "^29.5.14",
     "babel-plugin-pure-annotations": "^0.1.2",
-    "eslint": "^9.17.0",
+    "eslint": "^9.19.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.10.0",
     "eslint-plugin-react": "^7.37.2",
