@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Zero dependency React transition state machine.",
   "author": "Zheng Song",
   "license": "MIT",
@@ -9,9 +9,9 @@
     "url": "git+https://github.com/szhsin/react-transition-state.git"
   },
   "homepage": "https://szhsin.github.io/react-transition-state/",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
-  "types": "types/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./types/index.d.ts",
   "sideEffects": false,
   "files": [
     "dist/",
@@ -37,6 +37,14 @@
     "pret": "prettier -c .",
     "pret:fix": "prettier -w .",
     "build": "run-s pret clean lint types bundle"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.mjs"
+    },
+    "./package.json": "./package.json"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
