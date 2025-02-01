@@ -43,7 +43,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.25.4",
     "@rollup/plugin-babel": "^6.0.4",
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
     "babel-plugin-pure-annotations": "^0.1.2",
     "eslint": "^9.19.0",
