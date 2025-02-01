@@ -1,7 +1,6 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import { fixupPluginRules } from '@eslint/compat';
 import globals from 'globals';
 import prettier from 'eslint-config-prettier';
 import jest from 'eslint-plugin-jest';
@@ -15,6 +14,7 @@ export default [
   jest.configs['flat/recommended'],
   jest.configs['flat/style'],
   react.configs.flat.recommended,
+  reactHooksAddons.configs.recommended,
   {
     ignores: ['**/dist/', '**/types/', '**/coverage/', '**/build/']
   },
@@ -41,9 +41,7 @@ export default [
     plugins: {
       jest,
       react,
-      // @ts-ignore
-      ['react-hooks']: fixupPluginRules(reactHooks),
-      ['react-hooks-addons']: fixupPluginRules(reactHooksAddons)
+      'react-hooks': reactHooks
     },
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
