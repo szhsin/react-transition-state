@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { getTimeout, getEndStatus, PRE_EXIT, nextTick, PRE_ENTER, EXITING, ENTERING, ENTERED, startOrEnd, getState } from './utils.js';
+import { getTimeout, getEndStatus, PRE_EXIT, nextTick, PRE_ENTER, EXITING, ENTERING, ENTERED, startOrEnd, getState } from './utils.mjs';
 
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
   clearTimeout(timeoutId);
