@@ -70,7 +70,7 @@
     "prettier": "^3.4.2",
     "react": "^19",
     "react-dom": "^19",
-    "rollup": "^4.34.8",
+    "rollup": "^4.35.0",
     "typescript": "^5.7.3"
   },
   "overrides": {
