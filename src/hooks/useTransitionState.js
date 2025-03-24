@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import {
   PRE_ENTER,
   ENTERING,
@@ -86,8 +86,6 @@ export const useTransitionState = ({
       unmountOnExit
     ]
   );
-
-  useEffect(() => () => clearTimeout(timeoutId.current), []);
 
   return [state, toggle, endTransition];
 };

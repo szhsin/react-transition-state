@@ -55,7 +55,6 @@ const useTransitionState = ({
       enterStage && transitState(exit ? preExit ? utils.PRE_EXIT : utils.EXITING : utils.startOrEnd(unmountOnExit));
     }
   }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
-  react.useEffect(() => () => clearTimeout(timeoutId.current), []);
   return [state, toggle, endTransition];
 };
 
