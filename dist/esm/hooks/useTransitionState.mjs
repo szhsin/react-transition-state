@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { getState, ENTERED, startOrEnd, getTimeout, getEndStatus, PRE_EXIT, nextTick, PRE_ENTER, EXITING, ENTERING } from './utils.mjs';
 
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
@@ -53,7 +53,6 @@ const useTransitionState = ({
       enterStage && transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
     }
   }, [endTransition, onChange, enter, exit, preEnter, preExit, enterTimeout, exitTimeout, unmountOnExit]);
-  useEffect(() => () => clearTimeout(timeoutId.current), []);
   return [state, toggle, endTransition];
 };
 
