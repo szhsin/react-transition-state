@@ -71,7 +71,7 @@
     "react": "^19",
     "react-dom": "^19",
     "rollup": "^4.34.8",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "whatwg-url@11.0.0": {
