@@ -72,10 +72,5 @@
     "react-dom": "^19",
     "rollup": "^4.44.2",
     "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "whatwg-url@11.0.0": {
-      "tr46": "^4"
-    }
   }
 }
