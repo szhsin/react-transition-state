@@ -71,6 +71,6 @@
     "react": "^19",
     "react-dom": "^19",
     "rollup": "^4.46.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }
