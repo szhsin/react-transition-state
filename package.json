@@ -57,11 +57,11 @@
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
     "babel-plugin-pure-annotations": "^0.1.2",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^6.1.1",
     "eslint-plugin-react-hooks-addons": "^0.5.0",
     "globals": "^16.4.0",
     "jest": "^30.2.0",
@@ -70,7 +70,7 @@
     "prettier": "^3.6.2",
     "react": "^19",
     "react-dom": "^19",
-    "rollup": "^4.52.3",
-    "typescript": "^5.9.2"
+    "rollup": "^4.52.4",
+    "typescript": "^5.9.3"
   }
 }
