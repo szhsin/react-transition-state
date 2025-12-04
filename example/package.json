@@ -8,8 +8,8 @@
     "react-dom": "file:../node_modules/react-dom",
     "react-scripts": "5.0.1",
     "react-transition-state": "file:..",
-    "styled-components": "^6.1.14",
-    "web-vitals": "^2.1.4"
+    "styled-components": "^6.1.19",
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
