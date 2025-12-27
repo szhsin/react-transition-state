@@ -1,4 +1,4 @@
-import { useTransitionState } from 'react-transition-state';
+import { useTransitionState, type TransitionState } from 'react-transition-state';
 
 // Ideal for creating switch transition for a small number of elements
 // Use `useTransitionState` hook once for each element in the switch transition
@@ -32,7 +32,11 @@ export const SwitchTransition = () => {
   );
 };
 
-const SwitchButton = ({ state: { status, isMounted }, onClick, children }) => {
+const SwitchButton = ({
+  state: { status, isMounted },
+  onClick,
+  children
+}: { state: TransitionState } & React.ComponentPropsWithoutRef<'button'>) => {
   if (!isMounted) return null;
 
   return (

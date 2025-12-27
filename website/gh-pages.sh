@@ -2,19 +2,19 @@
 
 set -e
 
-check_str=$(pwd | grep "/example")
+check_str=$(pwd | grep "/website")
 if [ -z "$check_str" ]; then
-    echo "Not in /example"
+    echo "Not in /website"
     exit 1
 fi
 
-rm -Rf build/
+rm -Rf dist/
 npm run build
 
 tmpdir="$HOME/gh-pages"
 rm -Rf "$tmpdir"
 mkdir "$tmpdir"
-mv build "$tmpdir"
+mv dist "$tmpdir"
 cd ..
 
 git checkout gh-pages
@@ -24,8 +24,8 @@ if [ -z "$check_str" ]; then
     exit 1
 fi
 
-rm -Rf static
-cp -Rf "$tmpdir/build/" .
+rm -Rf assets
+cp -Rf "$tmpdir/dist/" .
 git add .
 git commit -m "Updates"
 rm -Rf "$tmpdir"
