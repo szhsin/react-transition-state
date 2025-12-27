@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTransitionMap } from 'react-transition-state';
+import { useTransitionMap, type TransitionMapResult } from 'react-transition-state';
 
 // Creating switch transitions for a large number of elements,
 // or the number of elements is only known at runtime.
@@ -8,7 +8,7 @@ const NUMBER_OF_BUTTONS = 5;
 const buttonArray = new Array(NUMBER_OF_BUTTONS).fill(0).map((_, i) => `Button ${i + 1}`);
 
 export const SwitchTransitionMap = () => {
-  const transition = useTransitionMap({
+  const transition = useTransitionMap<number>({
     timeout: 300,
     mountOnEnter: true,
     unmountOnExit: true,
@@ -32,6 +32,13 @@ export const SwitchTransitionMap = () => {
   );
 };
 
+interface SwitchButtonProps<TKey> extends TransitionMapResult<TKey> {
+  itemKey: TKey;
+  nextItemKey: TKey;
+  initialEntered: boolean;
+  children: React.ReactNode;
+}
+
 const SwitchButton = ({
   itemKey,
   nextItemKey,
@@ -41,7 +48,7 @@ const SwitchButton = ({
   toggle,
   setItem,
   deleteItem
-}) => {
+}: SwitchButtonProps<number>) => {
   useEffect(() => {
     setItem(itemKey, { initialEntered });
     return () => void deleteItem(itemKey);

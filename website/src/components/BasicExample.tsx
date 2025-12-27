@@ -13,7 +13,7 @@ const BasicExample = () => {
 
   return (
     <div className="basic-example">
-      <h1>CSS example</h1>
+      <h1>Display toggle transition</h1>
       <div className="basic-console">
         <div className="basic-status">status: {status}</div>
         <label>
@@ -28,8 +28,8 @@ const BasicExample = () => {
           {status === 'entering' || status === 'entered' ? 'Hide' : 'Show'}
         </button>
         <em className="tips">
-          Tip: open the browser dev tools to verify that the following message is being moved in and
-          out of DOM.
+          Tip: open the browser dev tools to inspect that the following message is being moved in
+          and out of DOM.
         </em>
       </div>
       {isMounted && <div className={`basic-transition ${status}`}>React transition state</div>}
