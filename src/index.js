@@ -1,3 +1,5 @@
+'use client';
+
 export {
   useTransitionState,
   useTransitionState as useTransition,

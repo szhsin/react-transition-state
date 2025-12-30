@@ -1,13 +1,12 @@
+
 'use strict';
+'use client';
 
 Object.defineProperty(exports, '__esModule', { value: true });
+const require_useTransitionState = require('./hooks/useTransitionState.cjs');
+const require_useTransitionMap = require('./hooks/useTransitionMap.cjs');
 
-var useTransitionState = require('./hooks/useTransitionState.cjs');
-var useTransitionMap = require('./hooks/useTransitionMap.cjs');
-
-
-
-exports.default = useTransitionState.useTransitionState;
-exports.useTransition = useTransitionState.useTransitionState;
-exports.useTransitionState = useTransitionState.useTransitionState;
-exports.useTransitionMap = useTransitionMap.useTransitionMap;
+exports.default = require_useTransitionState.useTransitionState;
+exports.useTransition = require_useTransitionState.useTransitionState;
+exports.useTransitionMap = require_useTransitionMap.useTransitionMap;
+exports.useTransitionState = require_useTransitionState.useTransitionState;
