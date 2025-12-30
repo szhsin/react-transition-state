@@ -3,7 +3,7 @@
 import eslint from '@eslint/js';
 import globals from 'globals';
 import prettier from 'eslint-config-prettier';
-import jest from 'eslint-plugin-jest';
+import vitest from '@vitest/eslint-plugin';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactHooksAddons from 'eslint-plugin-react-hooks-addons';
@@ -11,9 +11,9 @@ import reactHooksAddons from 'eslint-plugin-react-hooks-addons';
 export default [
   eslint.configs.recommended,
   prettier,
-  jest.configs['flat/recommended'],
-  jest.configs['flat/style'],
+  vitest.configs.recommended,
   react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
   reactHooksAddons.configs.recommended,
   {
     ignores: ['**/dist/', '**/types/', '**/coverage/', '**/build/']
@@ -30,7 +30,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.jest
+        ...globals.vitest
       }
     },
     settings: {
@@ -39,17 +39,13 @@ export default [
       }
     },
     plugins: {
-      jest,
-      react,
       'react-hooks': reactHooks
     },
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
-      'react/react-in-jsx-scope': 0,
       'react/prop-types': 0,
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'error',
-      'react-hooks-addons/no-unused-deps': 'error'
+      'react-hooks/exhaustive-deps': 'error'
     }
   }
 ];

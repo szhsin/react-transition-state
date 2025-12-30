@@ -39,7 +39,7 @@ class Result {
 }
 
 const renderTransitionHook = (options) => {
-  const render = jest.fn();
+  const render = vi.fn();
   const { result, ...rest } = renderHook((props) => {
     render();
     return useTransitionState(props);
@@ -48,7 +48,7 @@ const renderTransitionHook = (options) => {
   return { result: new Result(result), render, ...rest };
 };
 
-const onChange = jest.fn();
+const onChange = vi.fn();
 
 test('should return correct value', () => {
   const { result } = renderTransitionHook();
