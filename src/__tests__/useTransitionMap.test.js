@@ -51,7 +51,7 @@ class Result {
 }
 
 const renderTransitionHook = (options) => {
-  const render = jest.fn();
+  const render = vi.fn();
   const { result, ...rest } = renderHook((props) => {
     render();
     return useTransitionMap(props);
@@ -65,7 +65,7 @@ const getOnChangeParams = (status, key = 1) => ({
   current: expect.objectContaining({ status })
 });
 
-const onChange = jest.fn();
+const onChange = vi.fn();
 
 test('should toggle state', () => {
   const { result, render } = renderTransitionHook({ initialProps: { onStateChange: onChange } });
@@ -326,7 +326,7 @@ test('returned functions have stable identity across re-renders', () => {
 });
 
 test('should set and delete items', () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation();
+  const errorSpy = vi.spyOn(console, 'error').mockImplementation();
   const { result } = renderTransitionHook();
   result.setItem(1);
   result.setItem(2, { initialEntered: true });
