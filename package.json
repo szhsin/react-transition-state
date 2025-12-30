@@ -1,6 +1,6 @@
 {
   "name": "react-transition-state",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Zero dependency React transition state machine.",
   "author": "Zheng Song",
   "license": "MIT",
@@ -26,9 +26,9 @@
     "state machine"
   ],
   "scripts": {
-    "start": "rollup -c -w",
+    "start": "rolldown -w -c",
     "clean": "rm -Rf dist",
-    "bundle": "rollup -c",
+    "bundle": "rolldown -c",
     "test": "jest",
     "eg": "npm start --prefix example",
     "types": "cd types && tsc",
@@ -53,7 +53,6 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
-    "@rollup/plugin-babel": "^6.1.0",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
     "babel-plugin-pure-annotations": "^0.1.2",
@@ -70,7 +69,8 @@
     "prettier": "^3.7.4",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "rollup": "^4.53.3",
+    "rolldown": "^1.0.0-beta.57",
+    "rollup-plugin-add-directive": "^1.0.0",
     "typescript": "^5.9.3"
   }
 }
