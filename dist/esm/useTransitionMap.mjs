@@ -1,12 +1,10 @@
+import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
+import { useCallback, useRef, useState } from "react";
 
-'use strict';
-const require_utils = require('./utils.cjs');
-let react = require("react");
-
-//#region src/hooks/useTransitionMap.js
+//#region src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
 	clearTimeout(timeoutId);
-	const state = require_utils.getState(status);
+	const state = getState(status);
 	const stateMap = new Map(latestStateMap.current);
 	stateMap.set(key, state);
 	setStateMap(stateMap);
@@ -17,16 +15,16 @@ const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChan
 	});
 };
 const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, preExit, timeout, initialEntered, mountOnEnter, unmountOnExit, onStateChange: onChange } = {}) => {
-	const [stateMap, setStateMap] = (0, react.useState)(/* @__PURE__ */ new Map());
-	const latestStateMap = (0, react.useRef)(stateMap);
-	const configMap = (0, react.useRef)(/* @__PURE__ */ new Map());
-	const [enterTimeout, exitTimeout] = require_utils.getTimeout(timeout);
-	const setItem = (0, react.useCallback)((key, config) => {
-		const { initialEntered: _initialEntered = initialEntered } = config || {};
-		updateState(key, _initialEntered ? require_utils.ENTERED : require_utils.startOrEnd(mountOnEnter), setStateMap, latestStateMap);
+	const [stateMap, setStateMap] = useState(/* @__PURE__ */ new Map());
+	const latestStateMap = useRef(stateMap);
+	const configMap = useRef(/* @__PURE__ */ new Map());
+	const [enterTimeout, exitTimeout] = getTimeout(timeout);
+	const setItem = useCallback((key, options) => {
+		const { initialEntered: _initialEntered = initialEntered } = options || {};
+		updateState(key, _initialEntered ? ENTERED : startOrEnd(mountOnEnter), setStateMap, latestStateMap);
 		configMap.current.set(key, {});
 	}, [initialEntered, mountOnEnter]);
-	const deleteItem = (0, react.useCallback)((key) => {
+	const deleteItem = useCallback((key) => {
 		const newStateMap = new Map(latestStateMap.current);
 		if (newStateMap.delete(key)) {
 			setStateMap(newStateMap);
@@ -36,35 +34,35 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		}
 		return false;
 	}, []);
-	const endTransition = (0, react.useCallback)((key) => {
+	const endTransition = useCallback((key) => {
 		const stateObj = latestStateMap.current.get(key);
 		if (!stateObj) {
-			process.env.NODE_ENV !== "production" && console.error(`[React-Transition-State] invalid key: ${key}`);
+			if (process.env.NODE_ENV !== "production") console.error(`[React-Transition-State] cannot call endTransition: invalid key — ${key}`);
 			return;
 		}
 		const { timeoutId } = configMap.current.get(key);
-		const status = require_utils.getEndStatus(stateObj._s, unmountOnExit);
+		const status = getEndStatus(stateObj._s, unmountOnExit);
 		status && updateState(key, status, setStateMap, latestStateMap, timeoutId, onChange);
 	}, [onChange, unmountOnExit]);
-	const toggle = (0, react.useCallback)((key, toEnter) => {
+	const toggle = useCallback((key, toEnter) => {
 		const stateObj = latestStateMap.current.get(key);
 		if (!stateObj) {
-			process.env.NODE_ENV !== "production" && console.error(`[React-Transition-State] invalid key: ${key}`);
+			if (process.env.NODE_ENV !== "production") console.error(`[React-Transition-State] cannot call toggle: invalid key — ${key}`);
 			return;
 		}
 		const config = configMap.current.get(key);
 		const transitState = (status) => {
 			updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 			switch (status) {
-				case require_utils.ENTERING:
-					if (enterTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
+				case ENTERING:
+					if (enterTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), enterTimeout);
 					break;
-				case require_utils.EXITING:
-					if (exitTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
+				case EXITING:
+					if (exitTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), exitTimeout);
 					break;
-				case require_utils.PRE_ENTER:
-				case require_utils.PRE_EXIT:
-					config.timeoutId = require_utils.nextTick(transitState, status);
+				case PRE_ENTER:
+				case PRE_EXIT:
+					config.timeoutId = nextTick(transitState, status);
 					break;
 			}
 		};
@@ -72,10 +70,10 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		if (typeof toEnter !== "boolean") toEnter = !enterStage;
 		if (toEnter) {
 			if (!enterStage) {
-				transitState(enter ? preEnter ? require_utils.PRE_ENTER : require_utils.ENTERING : require_utils.ENTERED);
+				transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
 				!allowMultiple && latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
 			}
-		} else if (enterStage) transitState(exit ? preExit ? require_utils.PRE_EXIT : require_utils.EXITING : require_utils.startOrEnd(unmountOnExit));
+		} else if (enterStage) transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
 	}, [
 		onChange,
 		endTransition,
@@ -91,7 +89,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	return {
 		stateMap,
 		toggle,
-		toggleAll: (0, react.useCallback)((toEnter) => {
+		toggleAll: useCallback((toEnter) => {
 			if (!allowMultiple && toEnter !== false) return;
 			for (const key of latestStateMap.current.keys()) toggle(key, toEnter);
 		}, [allowMultiple, toggle]),
@@ -102,4 +100,4 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 };
 
 //#endregion
-exports.useTransitionMap = useTransitionMap;
+export { useTransitionMap };

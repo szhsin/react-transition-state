@@ -1,4 +1,6 @@
 import { useRef, useState, useCallback } from 'react';
+import type { TransitionOptions, TransitionResult } from './types';
+import type { Status, State } from './utils';
 import {
   PRE_ENTER,
   ENTERING,
@@ -9,10 +11,17 @@ import {
   getState,
   getEndStatus,
   getTimeout,
-  nextTick
+  nextTick,
+  setTimeout
 } from './utils';
 
-const updateState = (status, setState, latestState, timeoutId, onChange) => {
+const updateState = (
+  status: Status,
+  setState: (newState: State) => void,
+  latestState: React.RefObject<State>,
+  timeoutId: React.RefObject<number>,
+  onChange: TransitionOptions['onStateChange']
+) => {
   clearTimeout(timeoutId.current);
   const state = getState(status);
   setState(state);
@@ -30,12 +39,12 @@ export const useTransitionState = ({
   mountOnEnter,
   unmountOnExit,
   onStateChange: onChange
-} = {}) => {
+}: TransitionOptions = {}): TransitionResult => {
   const [state, setState] = useState(() =>
     getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter))
   );
   const latestState = useRef(state);
-  const timeoutId = useRef();
+  const timeoutId = useRef(0);
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const endTransition = useCallback(() => {
@@ -44,17 +53,17 @@ export const useTransitionState = ({
   }, [onChange, unmountOnExit]);
 
   const toggle = useCallback(
-    (toEnter) => {
-      const transitState = (status) => {
+    (toEnter?: boolean) => {
+      const transitState = (status: Status) => {
         updateState(status, setState, latestState, timeoutId, onChange);
 
         switch (status) {
           case ENTERING:
-            if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+            if (enterTimeout! >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
             break;
 
           case EXITING:
-            if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+            if (exitTimeout! >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
             break;
 
           case PRE_ENTER:

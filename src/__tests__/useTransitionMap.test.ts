@@ -1,9 +1,18 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { STATUS } from './testUtils';
+import type {
+  TransitionMapResult,
+  TransitionMapOptions,
+  TransitionItemOptions,
+  TransitionStatus,
+  TransitionState
+} from '../';
 import { useTransitionMap } from '../';
 
 class Result {
-  constructor(result) {
+  readonly result: { current: TransitionMapResult<number> };
+
+  constructor(result: { current: TransitionMapResult<number> }) {
     this.result = result;
   }
 
@@ -16,16 +25,16 @@ class Result {
   }
 
   getStatus(key = 1) {
-    return this.stateMap.get(key).status;
+    return this.stateMap.get(key)?.status;
   }
 
-  toggle({ key = 1, toEnter } = {}) {
+  toggle({ key = 1, toEnter }: { key?: number; toEnter?: boolean } = {}) {
     act(() => {
       this.result.current.toggle(key, toEnter);
     });
   }
 
-  toggleAll(toEnter) {
+  toggleAll(toEnter?: boolean) {
     act(() => {
       this.result.current.toggleAll(toEnter);
     });
@@ -37,20 +46,20 @@ class Result {
     });
   }
 
-  setItem(...arg) {
+  setItem(key: number, options?: TransitionItemOptions) {
     act(() => {
-      this.result.current.setItem(...arg);
+      this.result.current.setItem(key, options);
     });
   }
 
-  deleteItem(...arg) {
+  deleteItem(key: number) {
     act(() => {
-      this.result.current.deleteItem(...arg);
+      this.result.current.deleteItem(key);
     });
   }
 }
 
-const renderTransitionHook = (options) => {
+const renderTransitionHook = (options: { initialProps?: TransitionMapOptions<number> } = {}) => {
   const render = vi.fn();
   const { result, ...rest } = renderHook((props) => {
     render();
@@ -60,9 +69,9 @@ const renderTransitionHook = (options) => {
   return { result: new Result(result), render, ...rest };
 };
 
-const getOnChangeParams = (status, key = 1) => ({
+const getOnChangeParams = (status: TransitionStatus, key = 1) => ({
   key,
-  current: expect.objectContaining({ status })
+  current: expect.objectContaining({ status }) as TransitionState
 });
 
 const onChange = vi.fn();
@@ -326,7 +335,7 @@ test('returned functions have stable identity across re-renders', () => {
 });
 
 test('should set and delete items', () => {
-  const errorSpy = vi.spyOn(console, 'error').mockImplementation();
+  const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   const { result } = renderTransitionHook();
   result.setItem(1);
   result.setItem(2, { initialEntered: true });
@@ -339,7 +348,7 @@ test('should set and delete items', () => {
   expect(result.getStatus(3)).toBe(STATUS.exited);
 
   result.deleteItem(1);
-  expect(() => result.getStatus(1)).toThrow();
+  expect(result.getStatus(1)).toBeUndefined();
   // Call deleteItem again intentionally
   result.deleteItem(1);
   expect(errorSpy).not.toHaveBeenCalled();

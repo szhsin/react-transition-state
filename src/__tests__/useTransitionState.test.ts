@@ -1,11 +1,16 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { STATUS } from './testUtils';
+import type { TransitionResult, TransitionOptions, TransitionStatus, TransitionState } from '../';
 import { useTransitionState } from '../';
 
-const getOnChangeParams = (status) => ({ current: expect.objectContaining({ status }) });
+const getOnChangeParams = (status: TransitionStatus) => ({
+  current: expect.objectContaining({ status }) as TransitionState
+});
 
 class Result {
-  constructor(result) {
+  readonly result: { current: TransitionResult };
+
+  constructor(result: { current: TransitionResult }) {
     this.result = result;
   }
 
@@ -25,7 +30,7 @@ class Result {
     return this.result.current[2];
   }
 
-  toggle(toEnter) {
+  toggle(toEnter?: boolean) {
     act(() => {
       this.toggleFn(toEnter);
     });
@@ -38,7 +43,7 @@ class Result {
   }
 }
 
-const renderTransitionHook = (options) => {
+const renderTransitionHook = (options: { initialProps?: TransitionOptions } = {}) => {
   const render = vi.fn();
   const { result, ...rest } = renderHook((props) => {
     render();

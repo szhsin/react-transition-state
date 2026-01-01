@@ -7,7 +7,7 @@ import {
   EXITING,
   EXITED,
   UNMOUNTED
-} from '../hooks/utils';
+} from '../utils';
 
 test('getState', () => {
   expect(getState(PRE_ENTER)).toEqual(
