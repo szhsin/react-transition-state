@@ -68,6 +68,7 @@
     "rolldown": "^1.0.0-beta.57",
     "rollup-plugin-add-directive": "^1.0.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.51.0",
     "vitest": "^4.0.16"
   }
 }

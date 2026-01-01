@@ -4,7 +4,8 @@ import type {
   TransitionMapResult,
   TransitionMapOptions,
   TransitionItemOptions,
-  TransitionStatus
+  TransitionStatus,
+  TransitionState
 } from '../';
 import { useTransitionMap } from '../';
 
@@ -70,7 +71,7 @@ const renderTransitionHook = (options: { initialProps?: TransitionMapOptions<num
 
 const getOnChangeParams = (status: TransitionStatus, key = 1) => ({
   key,
-  current: expect.objectContaining({ status })
+  current: expect.objectContaining({ status }) as TransitionState
 });
 
 const onChange = vi.fn();

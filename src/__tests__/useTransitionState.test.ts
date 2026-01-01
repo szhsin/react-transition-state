@@ -1,10 +1,10 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { STATUS } from './testUtils';
-import type { TransitionResult, TransitionOptions, TransitionStatus } from '../';
+import type { TransitionResult, TransitionOptions, TransitionStatus, TransitionState } from '../';
 import { useTransitionState } from '../';
 
 const getOnChangeParams = (status: TransitionStatus) => ({
-  current: expect.objectContaining({ status })
+  current: expect.objectContaining({ status }) as TransitionState
 });
 
 class Result {

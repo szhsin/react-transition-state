@@ -74,8 +74,10 @@ const useTransitionMap = <TKey>({
     (key: TKey) => {
       const stateObj = latestStateMap.current.get(key);
       if (!stateObj) {
-        process.env.NODE_ENV !== 'production' &&
-          console.error(`[React-Transition-State] invalid key: ${key}`);
+        if (process.env.NODE_ENV !== 'production') {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          console.error(`[React-Transition-State] cannot call endTransition: invalid key — ${key}`);
+        }
         return;
       }
 
@@ -90,8 +92,10 @@ const useTransitionMap = <TKey>({
     (key: TKey, toEnter?: boolean) => {
       const stateObj = latestStateMap.current.get(key);
       if (!stateObj) {
-        process.env.NODE_ENV !== 'production' &&
-          console.error(`[React-Transition-State] invalid key: ${key}`);
+        if (process.env.NODE_ENV !== 'production') {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          console.error(`[React-Transition-State] cannot call toggle: invalid key — ${key}`);
+        }
         return;
       }
 

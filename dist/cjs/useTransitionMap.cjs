@@ -39,7 +39,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const endTransition = (0, react.useCallback)((key) => {
 		const stateObj = latestStateMap.current.get(key);
 		if (!stateObj) {
-			process.env.NODE_ENV !== "production" && console.error(`[React-Transition-State] invalid key: ${key}`);
+			if (process.env.NODE_ENV !== "production") console.error(`[React-Transition-State] cannot call endTransition: invalid key — ${key}`);
 			return;
 		}
 		const { timeoutId } = configMap.current.get(key);
@@ -49,7 +49,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const toggle = (0, react.useCallback)((key, toEnter) => {
 		const stateObj = latestStateMap.current.get(key);
 		if (!stateObj) {
-			process.env.NODE_ENV !== "production" && console.error(`[React-Transition-State] invalid key: ${key}`);
+			if (process.env.NODE_ENV !== "production") console.error(`[React-Transition-State] cannot call toggle: invalid key — ${key}`);
 			return;
 		}
 		const config = configMap.current.get(key);
