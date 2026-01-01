@@ -26,7 +26,7 @@
     "state machine"
   ],
   "scripts": {
-    "clean": "rm -Rf dist",
+    "clean": "rm -Rf dist/ types/",
     "start": "rolldown -w -c",
     "bundle": "rolldown -c",
     "test": "vitest run",
@@ -34,6 +34,7 @@
     "lint": "eslint .",
     "pret": "prettier -c .",
     "pret:fix": "prettier -w .",
+    "prepare": "rm -Rf types/__tests__",
     "build": "run-s pret clean tc lint bundle"
   },
   "exports": {
