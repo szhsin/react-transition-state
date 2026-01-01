@@ -1,4 +1,4 @@
-//#region src/hooks/utils.js
+//#region src/hooks/utils.ts
 const PRE_ENTER = 0;
 const ENTERING = 1;
 const ENTERED = 2;
@@ -32,9 +32,10 @@ const getEndStatus = (status, unmountOnExit) => {
 	}
 };
 const getTimeout = (timeout) => typeof timeout === "object" ? [timeout.enter, timeout.exit] : [timeout, timeout];
-const nextTick = (transitState, status) => setTimeout(() => {
+const _setTimeout = setTimeout;
+const nextTick = (transitState, status) => _setTimeout(() => {
 	isNaN(document.body.offsetTop) || transitState(status + 1);
 }, 0);
 
 //#endregion
-export { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, getEndStatus, getState, getTimeout, nextTick, startOrEnd };
+export { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd };

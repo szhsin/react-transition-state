@@ -3,7 +3,7 @@
 const require_utils = require('./utils.cjs');
 let react = require("react");
 
-//#region src/hooks/useTransitionMap.js
+//#region src/hooks/useTransitionMap.ts
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
 	clearTimeout(timeoutId);
 	const state = require_utils.getState(status);
@@ -21,8 +21,8 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const latestStateMap = (0, react.useRef)(stateMap);
 	const configMap = (0, react.useRef)(/* @__PURE__ */ new Map());
 	const [enterTimeout, exitTimeout] = require_utils.getTimeout(timeout);
-	const setItem = (0, react.useCallback)((key, config) => {
-		const { initialEntered: _initialEntered = initialEntered } = config || {};
+	const setItem = (0, react.useCallback)((key, options) => {
+		const { initialEntered: _initialEntered = initialEntered } = options || {};
 		updateState(key, _initialEntered ? require_utils.ENTERED : require_utils.startOrEnd(mountOnEnter), setStateMap, latestStateMap);
 		configMap.current.set(key, {});
 	}, [initialEntered, mountOnEnter]);
@@ -57,10 +57,10 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 			updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 			switch (status) {
 				case require_utils.ENTERING:
-					if (enterTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
+					if (enterTimeout >= 0) config.timeoutId = require_utils._setTimeout(() => endTransition(key), enterTimeout);
 					break;
 				case require_utils.EXITING:
-					if (exitTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
+					if (exitTimeout >= 0) config.timeoutId = require_utils._setTimeout(() => endTransition(key), exitTimeout);
 					break;
 				case require_utils.PRE_ENTER:
 				case require_utils.PRE_EXIT:

@@ -1,7 +1,7 @@
-import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
+import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
 import { useCallback, useRef, useState } from "react";
 
-//#region src/hooks/useTransitionMap.js
+//#region src/hooks/useTransitionMap.ts
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
 	clearTimeout(timeoutId);
 	const state = getState(status);
@@ -19,8 +19,8 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const latestStateMap = useRef(stateMap);
 	const configMap = useRef(/* @__PURE__ */ new Map());
 	const [enterTimeout, exitTimeout] = getTimeout(timeout);
-	const setItem = useCallback((key, config) => {
-		const { initialEntered: _initialEntered = initialEntered } = config || {};
+	const setItem = useCallback((key, options) => {
+		const { initialEntered: _initialEntered = initialEntered } = options || {};
 		updateState(key, _initialEntered ? ENTERED : startOrEnd(mountOnEnter), setStateMap, latestStateMap);
 		configMap.current.set(key, {});
 	}, [initialEntered, mountOnEnter]);
@@ -55,10 +55,10 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 			updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 			switch (status) {
 				case ENTERING:
-					if (enterTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
+					if (enterTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), enterTimeout);
 					break;
 				case EXITING:
-					if (exitTimeout >= 0) config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
+					if (exitTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), exitTimeout);
 					break;
 				case PRE_ENTER:
 				case PRE_EXIT:

@@ -1,7 +1,7 @@
-import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
+import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
 import { useCallback, useRef, useState } from "react";
 
-//#region src/hooks/useTransitionState.js
+//#region src/hooks/useTransitionState.ts
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	clearTimeout(timeoutId.current);
 	const state = getState(status);
@@ -12,7 +12,7 @@ const updateState = (status, setState, latestState, timeoutId, onChange) => {
 const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, timeout, initialEntered, mountOnEnter, unmountOnExit, onStateChange: onChange } = {}) => {
 	const [state, setState] = useState(() => getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)));
 	const latestState = useRef(state);
-	const timeoutId = useRef();
+	const timeoutId = useRef(0);
 	const [enterTimeout, exitTimeout] = getTimeout(timeout);
 	const endTransition = useCallback(() => {
 		const status = getEndStatus(latestState.current._s, unmountOnExit);
@@ -25,10 +25,10 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 				updateState(status, setState, latestState, timeoutId, onChange);
 				switch (status) {
 					case ENTERING:
-						if (enterTimeout >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+						if (enterTimeout >= 0) timeoutId.current = _setTimeout(endTransition, enterTimeout);
 						break;
 					case EXITING:
-						if (exitTimeout >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+						if (exitTimeout >= 0) timeoutId.current = _setTimeout(endTransition, exitTimeout);
 						break;
 					case PRE_ENTER:
 					case PRE_EXIT:
