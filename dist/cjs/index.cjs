@@ -3,8 +3,8 @@
 'use client';
 
 Object.defineProperty(exports, '__esModule', { value: true });
-const require_useTransitionState = require('./hooks/useTransitionState.cjs');
-const require_useTransitionMap = require('./hooks/useTransitionMap.cjs');
+const require_useTransitionState = require('./useTransitionState.cjs');
+const require_useTransitionMap = require('./useTransitionMap.cjs');
 
 exports.default = require_useTransitionState.useTransitionState;
 exports.useTransition = require_useTransitionState.useTransitionState;

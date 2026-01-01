@@ -3,7 +3,7 @@
 const require_utils = require('./utils.cjs');
 let react = require("react");
 
-//#region src/hooks/useTransitionState.ts
+//#region src/useTransitionState.ts
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	clearTimeout(timeoutId.current);
 	const state = require_utils.getState(status);

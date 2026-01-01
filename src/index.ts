@@ -1,6 +1,6 @@
 'use client';
 
-export * from './hooks/types';
+export * from './types';
 export {
   useTransitionState,
   /**
@@ -11,5 +11,5 @@ export {
    * @deprecated The default export will be removed in v3.0.0. Use the named export `useTransitionState` instead.
    */
   useTransitionState as default
-} from './hooks/useTransitionState';
-export { useTransitionMap } from './hooks/useTransitionMap';
+} from './useTransitionState';
+export { useTransitionMap } from './useTransitionMap';

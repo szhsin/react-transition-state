@@ -1,7 +1,7 @@
 import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
 import { useCallback, useRef, useState } from "react";
 
-//#region src/hooks/useTransitionState.ts
+//#region src/useTransitionState.ts
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	clearTimeout(timeoutId.current);
 	const state = getState(status);

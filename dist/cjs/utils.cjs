@@ -1,7 +1,7 @@
 
 'use strict';
 
-//#region src/hooks/utils.ts
+//#region src/utils.ts
 const PRE_ENTER = 0;
 const ENTERING = 1;
 const ENTERED = 2;
