@@ -50,26 +50,26 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.3.1",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
-    "@vitest/coverage-istanbul": "^4.0.17",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
+    "@vitest/coverage-istanbul": "^4.0.18",
     "@vitest/eslint-plugin": "^1.6.6",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-hooks-addons": "^0.5.0",
-    "globals": "^17.0.0",
+    "globals": "^17.1.0",
     "jsdom": "^27.4.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "rolldown": "^1.0.0-beta.57",
     "rollup-plugin-add-directive": "^1.0.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.53.0",
-    "vitest": "^4.0.17"
+    "typescript-eslint": "^8.53.1",
+    "vitest": "^4.0.18"
   }
 }
