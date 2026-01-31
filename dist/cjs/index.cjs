@@ -2,7 +2,7 @@
 'use strict';
 'use client';
 
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperties(exports, { __esModule: { value: true }, [Symbol.toStringTag]: { value: 'Module' } });
 const require_useTransitionState = require('./useTransitionState.cjs');
 const require_useTransitionMap = require('./useTransitionMap.cjs');
 
