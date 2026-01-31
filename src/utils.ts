@@ -56,7 +56,10 @@ export const getEndStatus = (status: Status, unmountOnExit: boolean | undefined)
 export const getTimeout = (timeout: TransitionOptions['timeout']) =>
   typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 
-const _setTimeout = setTimeout as typeof window.setTimeout;
+// Wrap setTimeout in a function with spread to ensure it is evaluated at call time.
+// https://github.com/szhsin/react-transition-state/issues/868
+// eslint-disable-next-line @typescript-eslint/no-implied-eval
+const _setTimeout: WindowOrWorkerGlobalScope['setTimeout'] = (...args) => setTimeout(...args);
 export { _setTimeout as setTimeout };
 
 export const nextTick = (transitState: (status: Status) => void, status: Status) =>

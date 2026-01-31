@@ -17,6 +17,6 @@ export declare const getState: (status: Status) => State;
 export declare const startOrEnd: (unmounted: boolean | undefined) => 5 | 6;
 export declare const getEndStatus: (status: Status, unmountOnExit: boolean | undefined) => 2 | 5 | 6 | undefined;
 export declare const getTimeout: (timeout: TransitionOptions["timeout"]) => (number | undefined)[];
-declare const _setTimeout: typeof window.setTimeout;
+declare const _setTimeout: WindowOrWorkerGlobalScope['setTimeout'];
 export { _setTimeout as setTimeout };
 export declare const nextTick: (transitState: (status: Status) => void, status: Status) => number;

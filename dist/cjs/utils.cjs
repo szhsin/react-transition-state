@@ -35,7 +35,7 @@ const getEndStatus = (status, unmountOnExit) => {
 	}
 };
 const getTimeout = (timeout) => typeof timeout === "object" ? [timeout.enter, timeout.exit] : [timeout, timeout];
-const _setTimeout = setTimeout;
+const _setTimeout = (...args) => setTimeout(...args);
 const nextTick = (transitState, status) => _setTimeout(() => {
 	isNaN(document.body.offsetTop) || transitState(status + 1);
 }, 0);
