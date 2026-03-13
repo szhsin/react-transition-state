@@ -1,8 +1,6 @@
-
-'use strict';
-const require_utils = require('./utils.cjs');
+"use strict";
+const require_utils = require("./utils.cjs");
 let react = require("react");
-
 //#region src/useTransitionState.ts
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	clearTimeout(timeoutId.current);
@@ -12,7 +10,7 @@ const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	onChange && onChange({ current: state });
 };
 const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, timeout, initialEntered, mountOnEnter, unmountOnExit, onStateChange: onChange } = {}) => {
-	const [state, setState] = (0, react.useState)(() => require_utils.getState(initialEntered ? require_utils.ENTERED : require_utils.startOrEnd(mountOnEnter)));
+	const [state, setState] = (0, react.useState)(() => require_utils.getState(initialEntered ? 2 : require_utils.startOrEnd(mountOnEnter)));
 	const latestState = (0, react.useRef)(state);
 	const timeoutId = (0, react.useRef)(0);
 	const [enterTimeout, exitTimeout] = require_utils.getTimeout(timeout);
@@ -26,22 +24,22 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 			const transitState = (status) => {
 				updateState(status, setState, latestState, timeoutId, onChange);
 				switch (status) {
-					case require_utils.ENTERING:
+					case 1:
 						if (enterTimeout >= 0) timeoutId.current = require_utils._setTimeout(endTransition, enterTimeout);
 						break;
-					case require_utils.EXITING:
+					case 4:
 						if (exitTimeout >= 0) timeoutId.current = require_utils._setTimeout(endTransition, exitTimeout);
 						break;
-					case require_utils.PRE_ENTER:
-					case require_utils.PRE_EXIT:
+					case 0:
+					case 3:
 						timeoutId.current = require_utils.nextTick(transitState, status);
 						break;
 				}
 			};
 			const enterStage = latestState.current.isEnter;
 			if (typeof toEnter !== "boolean") toEnter = !enterStage;
-			if (toEnter) !enterStage && transitState(enter ? preEnter ? require_utils.PRE_ENTER : require_utils.ENTERING : require_utils.ENTERED);
-			else enterStage && transitState(exit ? preExit ? require_utils.PRE_EXIT : require_utils.EXITING : require_utils.startOrEnd(unmountOnExit));
+			if (toEnter) !enterStage && transitState(enter ? preEnter ? 0 : 1 : 2);
+			else enterStage && transitState(exit ? preExit ? 3 : 4 : require_utils.startOrEnd(unmountOnExit));
 		}, [
 			endTransition,
 			onChange,
@@ -56,6 +54,5 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 		endTransition
 	];
 };
-
 //#endregion
 exports.useTransitionState = useTransitionState;

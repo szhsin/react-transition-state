@@ -1,8 +1,6 @@
-
-'use strict';
-const require_utils = require('./utils.cjs');
+"use strict";
+const require_utils = require("./utils.cjs");
 let react = require("react");
-
 //#region src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
 	clearTimeout(timeoutId);
@@ -23,7 +21,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const [enterTimeout, exitTimeout] = require_utils.getTimeout(timeout);
 	const setItem = (0, react.useCallback)((key, options) => {
 		const { initialEntered: _initialEntered = initialEntered } = options || {};
-		updateState(key, _initialEntered ? require_utils.ENTERED : require_utils.startOrEnd(mountOnEnter), setStateMap, latestStateMap);
+		updateState(key, _initialEntered ? 2 : require_utils.startOrEnd(mountOnEnter), setStateMap, latestStateMap);
 		configMap.current.set(key, {});
 	}, [initialEntered, mountOnEnter]);
 	const deleteItem = (0, react.useCallback)((key) => {
@@ -56,14 +54,14 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		const transitState = (status) => {
 			updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 			switch (status) {
-				case require_utils.ENTERING:
+				case 1:
 					if (enterTimeout >= 0) config.timeoutId = require_utils._setTimeout(() => endTransition(key), enterTimeout);
 					break;
-				case require_utils.EXITING:
+				case 4:
 					if (exitTimeout >= 0) config.timeoutId = require_utils._setTimeout(() => endTransition(key), exitTimeout);
 					break;
-				case require_utils.PRE_ENTER:
-				case require_utils.PRE_EXIT:
+				case 0:
+				case 3:
 					config.timeoutId = require_utils.nextTick(transitState, status);
 					break;
 			}
@@ -72,10 +70,10 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		if (typeof toEnter !== "boolean") toEnter = !enterStage;
 		if (toEnter) {
 			if (!enterStage) {
-				transitState(enter ? preEnter ? require_utils.PRE_ENTER : require_utils.ENTERING : require_utils.ENTERED);
+				transitState(enter ? preEnter ? 0 : 1 : 2);
 				!allowMultiple && latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
 			}
-		} else if (enterStage) transitState(exit ? preExit ? require_utils.PRE_EXIT : require_utils.EXITING : require_utils.startOrEnd(unmountOnExit));
+		} else if (enterStage) transitState(exit ? preExit ? 3 : 4 : require_utils.startOrEnd(unmountOnExit));
 	}, [
 		onChange,
 		endTransition,
@@ -100,6 +98,5 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		deleteItem
 	};
 };
-
 //#endregion
 exports.useTransitionMap = useTransitionMap;

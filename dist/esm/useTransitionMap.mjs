@@ -1,6 +1,5 @@
-import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
+import { _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
 import { useCallback, useRef, useState } from "react";
-
 //#region src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, latestStateMap, timeoutId, onChange) => {
 	clearTimeout(timeoutId);
@@ -21,7 +20,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const [enterTimeout, exitTimeout] = getTimeout(timeout);
 	const setItem = useCallback((key, options) => {
 		const { initialEntered: _initialEntered = initialEntered } = options || {};
-		updateState(key, _initialEntered ? ENTERED : startOrEnd(mountOnEnter), setStateMap, latestStateMap);
+		updateState(key, _initialEntered ? 2 : startOrEnd(mountOnEnter), setStateMap, latestStateMap);
 		configMap.current.set(key, {});
 	}, [initialEntered, mountOnEnter]);
 	const deleteItem = useCallback((key) => {
@@ -54,14 +53,14 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		const transitState = (status) => {
 			updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
 			switch (status) {
-				case ENTERING:
+				case 1:
 					if (enterTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), enterTimeout);
 					break;
-				case EXITING:
+				case 4:
 					if (exitTimeout >= 0) config.timeoutId = _setTimeout(() => endTransition(key), exitTimeout);
 					break;
-				case PRE_ENTER:
-				case PRE_EXIT:
+				case 0:
+				case 3:
 					config.timeoutId = nextTick(transitState, status);
 					break;
 			}
@@ -70,10 +69,10 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		if (typeof toEnter !== "boolean") toEnter = !enterStage;
 		if (toEnter) {
 			if (!enterStage) {
-				transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
+				transitState(enter ? preEnter ? 0 : 1 : 2);
 				!allowMultiple && latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
 			}
-		} else if (enterStage) transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
+		} else if (enterStage) transitState(exit ? preExit ? 3 : 4 : startOrEnd(unmountOnExit));
 	}, [
 		onChange,
 		endTransition,
@@ -98,6 +97,5 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		deleteItem
 	};
 };
-
 //#endregion
 export { useTransitionMap };
