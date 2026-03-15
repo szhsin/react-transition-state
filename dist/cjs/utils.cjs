@@ -1,14 +1,4 @@
-
-'use strict';
-
-//#region src/utils.ts
-const PRE_ENTER = 0;
-const ENTERING = 1;
-const ENTERED = 2;
-const PRE_EXIT = 3;
-const EXITING = 4;
-const EXITED = 5;
-const UNMOUNTED = 6;
+"use strict";
 const STATUS = [
 	"preEnter",
 	"entering",
@@ -21,17 +11,17 @@ const STATUS = [
 const getState = (status) => ({
 	_s: status,
 	status: STATUS[status],
-	isEnter: status < PRE_EXIT,
-	isMounted: status !== UNMOUNTED,
-	isResolved: status === ENTERED || status > EXITING
+	isEnter: status < 3,
+	isMounted: status !== 6,
+	isResolved: status === 2 || status > 4
 });
-const startOrEnd = (unmounted) => unmounted ? UNMOUNTED : EXITED;
+const startOrEnd = (unmounted) => unmounted ? 6 : 5;
 const getEndStatus = (status, unmountOnExit) => {
 	switch (status) {
-		case ENTERING:
-		case PRE_ENTER: return ENTERED;
-		case EXITING:
-		case PRE_EXIT: return startOrEnd(unmountOnExit);
+		case 1:
+		case 0: return 2;
+		case 4:
+		case 3: return startOrEnd(unmountOnExit);
 	}
 };
 const getTimeout = (timeout) => typeof timeout === "object" ? [timeout.enter, timeout.exit] : [timeout, timeout];
@@ -39,13 +29,7 @@ const _setTimeout = (...args) => setTimeout(...args);
 const nextTick = (transitState, status) => _setTimeout(() => {
 	isNaN(document.body.offsetTop) || transitState(status + 1);
 }, 0);
-
 //#endregion
-exports.ENTERED = ENTERED;
-exports.ENTERING = ENTERING;
-exports.EXITING = EXITING;
-exports.PRE_ENTER = PRE_ENTER;
-exports.PRE_EXIT = PRE_EXIT;
 exports._setTimeout = _setTimeout;
 exports.getEndStatus = getEndStatus;
 exports.getState = getState;

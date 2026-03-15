@@ -1,6 +1,5 @@
-import { ENTERED, ENTERING, EXITING, PRE_ENTER, PRE_EXIT, _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
+import { _setTimeout, getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./utils.mjs";
 import { useCallback, useRef, useState } from "react";
-
 //#region src/useTransitionState.ts
 const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	clearTimeout(timeoutId.current);
@@ -10,7 +9,7 @@ const updateState = (status, setState, latestState, timeoutId, onChange) => {
 	onChange && onChange({ current: state });
 };
 const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, timeout, initialEntered, mountOnEnter, unmountOnExit, onStateChange: onChange } = {}) => {
-	const [state, setState] = useState(() => getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter)));
+	const [state, setState] = useState(() => getState(initialEntered ? 2 : startOrEnd(mountOnEnter)));
 	const latestState = useRef(state);
 	const timeoutId = useRef(0);
 	const [enterTimeout, exitTimeout] = getTimeout(timeout);
@@ -24,22 +23,22 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 			const transitState = (status) => {
 				updateState(status, setState, latestState, timeoutId, onChange);
 				switch (status) {
-					case ENTERING:
+					case 1:
 						if (enterTimeout >= 0) timeoutId.current = _setTimeout(endTransition, enterTimeout);
 						break;
-					case EXITING:
+					case 4:
 						if (exitTimeout >= 0) timeoutId.current = _setTimeout(endTransition, exitTimeout);
 						break;
-					case PRE_ENTER:
-					case PRE_EXIT:
+					case 0:
+					case 3:
 						timeoutId.current = nextTick(transitState, status);
 						break;
 				}
 			};
 			const enterStage = latestState.current.isEnter;
 			if (typeof toEnter !== "boolean") toEnter = !enterStage;
-			if (toEnter) !enterStage && transitState(enter ? preEnter ? PRE_ENTER : ENTERING : ENTERED);
-			else enterStage && transitState(exit ? preExit ? PRE_EXIT : EXITING : startOrEnd(unmountOnExit));
+			if (toEnter) !enterStage && transitState(enter ? preEnter ? 0 : 1 : 2);
+			else enterStage && transitState(exit ? preExit ? 3 : 4 : startOrEnd(unmountOnExit));
 		}, [
 			endTransition,
 			onChange,
@@ -54,6 +53,5 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 		endTransition
 	];
 };
-
 //#endregion
 export { useTransitionState };
