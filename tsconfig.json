@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "emitDeclarationOnly": true,
     "declaration": true,
     "declarationDir": "./types",
