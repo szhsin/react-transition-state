@@ -9,7 +9,7 @@ const STATUS = [
 	"unmounted"
 ];
 const getState = (status) => ({
-	_s: status,
+	$: status,
 	status: STATUS[status],
 	isEnter: status < 3,
 	isMounted: status !== 6,
@@ -25,12 +25,12 @@ const getEndStatus = (status, unmountOnExit) => {
 	}
 };
 const getTimeout = (timeout) => typeof timeout === "object" ? [timeout.enter, timeout.exit] : [timeout, timeout];
-const _setTimeout = (...args) => setTimeout(...args);
-const nextTick = (transitState, status) => _setTimeout(() => {
-	isNaN(document.body.offsetTop) || transitState(status + 1);
-}, 0);
+const nextTick = (callback, config) => {
+	config.r = requestAnimationFrame(() => {
+		config.r = requestAnimationFrame(callback);
+	});
+};
 //#endregion
-exports._setTimeout = _setTimeout;
 exports.getEndStatus = getEndStatus;
 exports.getState = getState;
 exports.getTimeout = getTimeout;
