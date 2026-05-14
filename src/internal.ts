@@ -1,3 +1,15 @@
+/**
+ * ⚠️ WARNING: INTERNAL TYPES
+ *
+ * These types are INTERNAL and NOT intended for public use.
+ * They may CHANGE WITHOUT NOTICE and do NOT follow semver rules.
+ *
+ * ❌ Do NOT extend or derive types from these.
+ *
+ * Single-character property names are used intentionally
+ * to MINIMIZE bundle size and reduce internal overhead.
+ */
+
 import type { TransitionOptions, TransitionState } from './types';
 
 export const PRE_ENTER = 0;
@@ -19,7 +31,31 @@ export type Status =
   | typeof UNMOUNTED;
 
 /** @internal [INTERNAL ONLY – DO NOT USE] */
-export type State = { _s: Status } & TransitionState;
+export type State = {
+  /** @internal status code */
+  $: Status;
+} & TransitionState;
+
+export interface Config {
+  /** @internal setTimeout Id */
+  t?: number;
+  /** @internal requestAnimationFrame Id */
+  r: number;
+}
+
+export interface TransitionStateRef extends Config {
+  /** @internal the latest state */
+  s: State;
+}
+
+export interface TransitionMapRef<TKey> {
+  /** @internal the latest state map */
+  m: Map<TKey, State>;
+  /** @internal the config map */
+  c: Map<TKey, Config>;
+}
+
+export type SetTimeout = WindowOrWorkerGlobalScope['setTimeout'];
 
 export const STATUS = [
   'preEnter',
@@ -32,7 +68,7 @@ export const STATUS = [
 ] as const;
 
 export const getState = (status: Status): State => ({
-  _s: status,
+  $: status,
   status: STATUS[status],
   isEnter: status < PRE_EXIT,
   isMounted: status !== UNMOUNTED,
@@ -56,14 +92,8 @@ export const getEndStatus = (status: Status, unmountOnExit: boolean | undefined)
 export const getTimeout = (timeout: TransitionOptions['timeout']) =>
   typeof timeout === 'object' ? [timeout.enter, timeout.exit] : [timeout, timeout];
 
-// Wrap setTimeout in a function with spread to ensure it is evaluated at call time.
-// https://github.com/szhsin/react-transition-state/issues/868
-// eslint-disable-next-line @typescript-eslint/no-implied-eval
-const _setTimeout: WindowOrWorkerGlobalScope['setTimeout'] = (...args) => setTimeout(...args);
-export { _setTimeout as setTimeout };
-
-export const nextTick = (transitState: (status: Status) => void, status: Status) =>
-  _setTimeout(() => {
-    // Reading document.body.offsetTop can force browser to repaint before transition to the next state
-    isNaN(document.body.offsetTop) || transitState((status + 1) as Status);
-  }, 0);
+export const nextTick = (callback: () => void, config: Config) => {
+  config.r = requestAnimationFrame(() => {
+    config.r = requestAnimationFrame(callback);
+  });
+};

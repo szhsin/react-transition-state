@@ -1,6 +1,6 @@
-import { useRef, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { TransitionMapOptions, TransitionItemOptions, TransitionMapResult } from './types';
-import type { Status, State } from './utils';
+import type { Status, State, TransitionMapRef, Config } from './internal';
 import {
   PRE_ENTER,
   ENTERING,
@@ -12,24 +12,27 @@ import {
   getEndStatus,
   getTimeout,
   nextTick,
-  setTimeout
-} from './utils';
+  type SetTimeout
+} from './internal';
 
 const updateState = <TKey>(
   key: TKey,
   status: Status,
   setStateMap: (newStateMap: Map<TKey, State>) => void,
-  latestStateMap: React.RefObject<Map<TKey, State>>,
-  timeoutId?: number,
+  ref: TransitionMapRef<TKey>,
+  config?: Config,
   onChange?: TransitionMapOptions<TKey>['onStateChange']
 ) => {
-  clearTimeout(timeoutId);
+  if (config) {
+    clearTimeout(config.t);
+    cancelAnimationFrame(config.r);
+  }
   const state = getState(status);
-  const stateMap = new Map(latestStateMap.current);
+  const stateMap = new Map(ref.m);
   stateMap.set(key, state);
   setStateMap(stateMap);
-  latestStateMap.current = stateMap;
-  onChange && onChange({ key, current: state });
+  ref.m = stateMap;
+  onChange?.({ key, current: state });
 };
 
 const useTransitionMap = <TKey>({
@@ -45,35 +48,37 @@ const useTransitionMap = <TKey>({
   onStateChange: onChange
 }: TransitionMapOptions<TKey> = {}): TransitionMapResult<TKey> => {
   const [stateMap, setStateMap] = useState(new Map<TKey, State>());
-  const latestStateMap = useRef(stateMap);
-  const configMap = useRef(new Map<TKey, { timeoutId?: number }>());
+  const [ref] = useState<TransitionMapRef<TKey>>({ m: stateMap, c: new Map() });
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const setItem = useCallback(
     (key: TKey, options?: TransitionItemOptions) => {
       const { initialEntered: _initialEntered = initialEntered } = options || {};
       const status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-      updateState(key, status, setStateMap, latestStateMap);
-      configMap.current.set(key, {});
+      updateState(key, status, setStateMap, ref);
+      ref.c.set(key, { r: 0 });
     },
-    [initialEntered, mountOnEnter]
+    [initialEntered, mountOnEnter, ref]
   );
 
-  const deleteItem = useCallback((key: TKey) => {
-    const newStateMap = new Map(latestStateMap.current);
-    if (newStateMap.delete(key)) {
-      setStateMap(newStateMap);
-      latestStateMap.current = newStateMap;
-      configMap.current.delete(key);
-      return true;
-    }
-    return false;
-  }, []);
+  const deleteItem = useCallback(
+    (key: TKey) => {
+      const newStateMap = new Map(ref.m);
+      if (newStateMap.delete(key)) {
+        setStateMap(newStateMap);
+        ref.m = newStateMap;
+        ref.c.delete(key);
+        return true;
+      }
+      return false;
+    },
+    [ref]
+  );
 
   const endTransition = useCallback(
     (key: TKey) => {
-      const stateObj = latestStateMap.current.get(key);
-      if (!stateObj) {
+      const state = ref.m.get(key);
+      if (!state) {
         if (process.env.NODE_ENV !== 'production') {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           console.error(`[React-Transition-State] cannot call endTransition: invalid key — ${key}`);
@@ -81,17 +86,16 @@ const useTransitionMap = <TKey>({
         return;
       }
 
-      const { timeoutId } = configMap.current.get(key)!;
-      const status = getEndStatus(stateObj._s, unmountOnExit);
-      status && updateState(key, status, setStateMap, latestStateMap, timeoutId, onChange);
+      const status = getEndStatus(state.$, unmountOnExit);
+      if (status) updateState(key, status, setStateMap, ref, ref.c.get(key), onChange);
     },
-    [onChange, unmountOnExit]
+    [onChange, unmountOnExit, ref]
   );
 
   const toggle = useCallback(
     (key: TKey, toEnter?: boolean) => {
-      const stateObj = latestStateMap.current.get(key);
-      if (!stateObj) {
+      const state = ref.m.get(key);
+      if (!state) {
         if (process.env.NODE_ENV !== 'production') {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           console.error(`[React-Transition-State] cannot call toggle: invalid key — ${key}`);
@@ -99,37 +103,36 @@ const useTransitionMap = <TKey>({
         return;
       }
 
-      const config = configMap.current.get(key)!;
+      const config = ref.c.get(key)!;
 
       const transitState = (status: Status) => {
-        updateState(key, status, setStateMap, latestStateMap, config.timeoutId, onChange);
+        updateState(key, status, setStateMap, ref, config, onChange);
 
         switch (status) {
           case ENTERING:
             if (enterTimeout! >= 0)
-              config.timeoutId = setTimeout(() => endTransition(key), enterTimeout);
+              config.t = (setTimeout as SetTimeout)(() => endTransition(key), enterTimeout);
             break;
 
           case EXITING:
             if (exitTimeout! >= 0)
-              config.timeoutId = setTimeout(() => endTransition(key), exitTimeout);
+              config.t = (setTimeout as SetTimeout)(() => endTransition(key), exitTimeout);
             break;
 
           case PRE_ENTER:
           case PRE_EXIT:
-            config.timeoutId = nextTick(transitState, status);
+            nextTick(() => transitState((status + 1) as Status), config);
             break;
         }
       };
 
-      const enterStage = stateObj.isEnter;
+      const enterStage = state.isEnter;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
         if (!enterStage) {
           transitState(enter ? (preEnter ? PRE_ENTER : ENTERING) : ENTERED);
-          !allowMultiple &&
-            latestStateMap.current.forEach((_, _key) => _key !== key && toggle(_key, false));
+          if (!allowMultiple) ref.m.forEach((_, _key) => _key !== key && toggle(_key, false));
         }
       } else {
         if (enterStage) {
@@ -138,6 +141,7 @@ const useTransitionMap = <TKey>({
       }
     },
     [
+      ref,
       onChange,
       endTransition,
       allowMultiple,
@@ -154,9 +158,9 @@ const useTransitionMap = <TKey>({
   const toggleAll = useCallback(
     (toEnter?: boolean) => {
       if (!allowMultiple && toEnter !== false) return;
-      for (const key of latestStateMap.current.keys()) toggle(key, toEnter);
+      for (const key of ref.m.keys()) toggle(key, toEnter);
     },
-    [allowMultiple, toggle]
+    [allowMultiple, toggle, ref]
   );
 
   return { stateMap, toggle, toggleAll, endTransition, setItem, deleteItem };

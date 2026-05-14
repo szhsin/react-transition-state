@@ -4,7 +4,7 @@
 
 **[Live Demo](https://szhsin.github.io/react-transition-state/)**
 
-[![NPM](https://img.shields.io/npm/v/react-transition-state.svg)](https://www.npmjs.com/package/react-transition-state) [![NPM](https://img.shields.io/npm/dm/react-transition-state)](https://www.npmjs.com/package/react-transition-state) [![NPM](https://img.shields.io/bundlephobia/minzip/react-transition-state)](https://bundlephobia.com/package/react-transition-state) [![Known Vulnerabilities](https://snyk.io/test/github/szhsin/react-transition-state/badge.svg)](https://snyk.io/test/github/szhsin/react-transition-state)
+[![NPM](https://img.shields.io/npm/v/react-transition-state.svg)](https://www.npmjs.com/package/react-transition-state) [![NPM](https://img.shields.io/npm/dm/react-transition-state)](https://www.npmjs.com/package/react-transition-state) [![bundlejs](https://deno.bundlejs.com/?q=react-transition-state&treeshake=%5B%7B+useTransitionState+%7D%5D&config=%7B%22esbuild%22%3A%7B%22external%22%3A%5B%22react%22%5D%7D%7D&badge=simple)](https://bundlejs.com/?q=react-transition-state&treeshake=%5B%7B+useTransitionState+%7D%5D&config=%7B%22esbuild%22%3A%7B%22external%22%3A%5B%22react%22%5D%7D%7D)
 
 ## Features
 
@@ -14,7 +14,7 @@ Inspired by the [React Transition Group](https://github.com/reactjs/react-transi
 - 🔄 Moving React components in and out of DOM seamlessly.
 - 🚫 Using no [derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
 - 🚀 Efficient: each state transition results in at most one extract render for consuming component.
-- 🤏 Tiny: [~1KB](https://bundlephobia.com/package/react-transition-state)(post-treeshaking) and no dependencies, ideal for both component libraries and applications.
+- 🤏 Tiny: [650B](https://bundlejs.com/?q=react-transition-state&treeshake=%5B%7B+useTransitionState+%7D%5D&config=%7B%22esbuild%22%3A%7B%22external%22%3A%5B%22react%22%5D%7D%7D)(post-treeshaking) and no dependencies, ideal for both component libraries and applications.
 
 🤔 Not convinced? [See a comparison with _React Transition Group_](#comparisons-with-react-transition-group)
 

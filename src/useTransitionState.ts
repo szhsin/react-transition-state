@@ -1,6 +1,6 @@
-import { useRef, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { TransitionOptions, TransitionResult } from './types';
-import type { Status, State } from './utils';
+import type { Status, State, TransitionStateRef } from './internal';
 import {
   PRE_ENTER,
   ENTERING,
@@ -12,21 +12,21 @@ import {
   getEndStatus,
   getTimeout,
   nextTick,
-  setTimeout
-} from './utils';
+  type SetTimeout
+} from './internal';
 
 const updateState = (
   status: Status,
   setState: (newState: State) => void,
-  latestState: React.RefObject<State>,
-  timeoutId: React.RefObject<number>,
+  ref: TransitionStateRef,
   onChange: TransitionOptions['onStateChange']
 ) => {
-  clearTimeout(timeoutId.current);
+  clearTimeout(ref.t);
+  cancelAnimationFrame(ref.r);
   const state = getState(status);
   setState(state);
-  latestState.current = state;
-  onChange && onChange({ current: state });
+  ref.s = state;
+  onChange?.({ current: state });
 };
 
 export const useTransitionState = ({
@@ -43,37 +43,36 @@ export const useTransitionState = ({
   const [state, setState] = useState(() =>
     getState(initialEntered ? ENTERED : startOrEnd(mountOnEnter))
   );
-  const latestState = useRef(state);
-  const timeoutId = useRef(0);
+  const [ref] = useState<TransitionStateRef>({ s: state, r: 0 });
   const [enterTimeout, exitTimeout] = getTimeout(timeout);
 
   const endTransition = useCallback(() => {
-    const status = getEndStatus(latestState.current._s, unmountOnExit);
-    status && updateState(status, setState, latestState, timeoutId, onChange);
-  }, [onChange, unmountOnExit]);
+    const status = getEndStatus(ref.s.$, unmountOnExit);
+    if (status) updateState(status, setState, ref, onChange);
+  }, [onChange, unmountOnExit, ref]);
 
   const toggle = useCallback(
     (toEnter?: boolean) => {
       const transitState = (status: Status) => {
-        updateState(status, setState, latestState, timeoutId, onChange);
+        updateState(status, setState, ref, onChange);
 
         switch (status) {
           case ENTERING:
-            if (enterTimeout! >= 0) timeoutId.current = setTimeout(endTransition, enterTimeout);
+            if (enterTimeout! >= 0) ref.t = (setTimeout as SetTimeout)(endTransition, enterTimeout);
             break;
 
           case EXITING:
-            if (exitTimeout! >= 0) timeoutId.current = setTimeout(endTransition, exitTimeout);
+            if (exitTimeout! >= 0) ref.t = (setTimeout as SetTimeout)(endTransition, exitTimeout);
             break;
 
           case PRE_ENTER:
           case PRE_EXIT:
-            timeoutId.current = nextTick(transitState, status);
+            nextTick(() => transitState((status + 1) as Status), ref);
             break;
         }
       };
 
-      const enterStage = latestState.current.isEnter;
+      const enterStage = ref.s.isEnter;
       if (typeof toEnter !== 'boolean') toEnter = !enterStage;
 
       if (toEnter) {
@@ -84,6 +83,7 @@ export const useTransitionState = ({
       }
     },
     [
+      ref,
       endTransition,
       onChange,
       enter,
