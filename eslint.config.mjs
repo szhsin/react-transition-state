@@ -5,7 +5,6 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import vitest from '@vitest/eslint-plugin';
-import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactHooksAddons from 'eslint-plugin-react-hooks-addons';
 
@@ -13,8 +12,6 @@ export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   vitest.configs.recommended,
-  react.configs.flat.recommended,
-  react.configs.flat['jsx-runtime'],
   reactHooksAddons.configs.recommended,
   prettier,
   {
@@ -47,14 +44,8 @@ export default defineConfig(
       // @ts-ignore
       'react-hooks': reactHooks
     },
-    settings: {
-      react: {
-        version: 'detect'
-      }
-    },
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
-      'react/prop-types': 0,
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'error',
       '@typescript-eslint/ban-ts-comment': 0,
@@ -68,16 +59,9 @@ export default defineConfig(
     }
   },
   {
-    files: ['**/__tests__/**/*'],
-    rules: {
-      'react/display-name': 0
-    }
-  },
-  {
     files: ['website/**/*'],
     rules: {
-      'no-console': 0,
-      'react/display-name': 0
+      'no-console': 0
     }
   }
 );
