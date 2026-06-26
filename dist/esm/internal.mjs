@@ -30,4 +30,4 @@ const nextTick = (callback, config) => {
 	});
 };
 //#endregion
-export { getEndStatus, getState, getTimeout, nextTick, startOrEnd };
+export { STATUS, getEndStatus, getState, getTimeout, nextTick, startOrEnd };
