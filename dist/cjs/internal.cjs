@@ -31,6 +31,7 @@ const nextTick = (callback, config) => {
 	});
 };
 //#endregion
+exports.STATUS = STATUS;
 exports.getEndStatus = getEndStatus;
 exports.getState = getState;
 exports.getTimeout = getTimeout;
