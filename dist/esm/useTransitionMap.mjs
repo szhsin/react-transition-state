@@ -25,7 +25,8 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const [enterTimeout, exitTimeout] = getTimeout(timeout);
 	const setItem = useCallback((key, options) => {
 		const { initialEntered: _initialEntered = initialEntered } = options || {};
-		updateState(key, _initialEntered ? 2 : startOrEnd(mountOnEnter), setStateMap, ref);
+		const status = _initialEntered ? 2 : startOrEnd(mountOnEnter);
+		updateState(key, status, setStateMap, ref);
 		ref.c.set(key, { r: 0 });
 	}, [
 		initialEntered,
