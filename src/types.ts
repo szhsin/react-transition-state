@@ -1,11 +1,5 @@
 export type TransitionStatus =
-  | 'preEnter'
-  | 'entering'
-  | 'entered'
-  | 'preExit'
-  | 'exiting'
-  | 'exited'
-  | 'unmounted';
+  'preEnter' | 'entering' | 'entered' | 'preExit' | 'exiting' | 'exited' | 'unmounted';
 
 export type TransitionState = Readonly<{
   status: TransitionStatus;

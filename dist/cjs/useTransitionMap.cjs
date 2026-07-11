@@ -26,7 +26,8 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const [enterTimeout, exitTimeout] = require_internal.getTimeout(timeout);
 	const setItem = (0, react.useCallback)((key, options) => {
 		const { initialEntered: _initialEntered = initialEntered } = options || {};
-		updateState(key, _initialEntered ? 2 : require_internal.startOrEnd(mountOnEnter), setStateMap, ref);
+		const status = _initialEntered ? 2 : require_internal.startOrEnd(mountOnEnter);
+		updateState(key, status, setStateMap, ref);
 		ref.c.set(key, { r: 0 });
 	}, [
 		initialEntered,
