@@ -37,9 +37,7 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 						if (exitTimeout >= 0) ref.t = setTimeout(endTransition, exitTimeout);
 						break;
 					case 0:
-					case 3:
-						nextTick(() => transitState(status + 1), ref);
-						break;
+					case 3: nextTick(() => transitState(status + 1), ref);
 				}
 			};
 			const enterStage = ref.s.isEnter;

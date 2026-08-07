@@ -73,9 +73,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 					if (exitTimeout >= 0) config.t = setTimeout(() => endTransition(key), exitTimeout);
 					break;
 				case 0:
-				case 3:
-					nextTick(() => transitState(status + 1), config);
-					break;
+				case 3: nextTick(() => transitState(status + 1), config);
 			}
 		};
 		const enterStage = state.isEnter;
