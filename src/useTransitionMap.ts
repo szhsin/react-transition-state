@@ -55,7 +55,7 @@ const useTransitionMap = <TKey>({
     (key: TKey, options?: TransitionItemOptions) => {
       const { initialEntered: _initialEntered = initialEntered } = options || {};
       const status = _initialEntered ? ENTERED : startOrEnd(mountOnEnter);
-      updateState(key, status, setStateMap, ref);
+      updateState(key, status, setStateMap, ref, ref.c.get(key));
       ref.c.set(key, { r: 0 });
     },
     [initialEntered, mountOnEnter, ref]
@@ -65,6 +65,9 @@ const useTransitionMap = <TKey>({
     (key: TKey) => {
       const newStateMap = new Map(ref.m);
       if (newStateMap.delete(key)) {
+        const config = ref.c.get(key)!;
+        clearTimeout(config.t);
+        cancelAnimationFrame(config.r);
         setStateMap(newStateMap);
         ref.m = newStateMap;
         ref.c.delete(key);

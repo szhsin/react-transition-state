@@ -27,7 +27,7 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const setItem = (0, react.useCallback)((key, options) => {
 		const { initialEntered: _initialEntered = initialEntered } = options || {};
 		const status = _initialEntered ? 2 : require_internal.startOrEnd(mountOnEnter);
-		updateState(key, status, setStateMap, ref);
+		updateState(key, status, setStateMap, ref, ref.c.get(key));
 		ref.c.set(key, { r: 0 });
 	}, [
 		initialEntered,
@@ -37,6 +37,9 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 	const deleteItem = (0, react.useCallback)((key) => {
 		const newStateMap = new Map(ref.m);
 		if (newStateMap.delete(key)) {
+			const config = ref.c.get(key);
+			clearTimeout(config.t);
+			cancelAnimationFrame(config.r);
 			setStateMap(newStateMap);
 			ref.m = newStateMap;
 			ref.c.delete(key);
