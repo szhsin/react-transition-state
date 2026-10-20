@@ -76,6 +76,55 @@ const getOnChangeParams = (status: TransitionStatus, key = 1) => ({
 
 const onChange = vi.fn();
 
+test.each([false, true])(
+  'deleted items stay deleted during pre-transition (initialEntered: %s)',
+  (initialEntered) => {
+    vi.useFakeTimers();
+    try {
+      const { result } = renderTransitionHook({
+        initialProps: {
+          initialEntered,
+          preEnter: true,
+          preExit: true,
+          timeout: 100,
+          onStateChange: onChange
+        }
+      });
+      result.setItem(1);
+      result.toggle();
+      onChange.mockClear();
+      result.deleteItem(1);
+
+      act(() => vi.runAllTimers());
+
+      expect(result.stateMap.has(1)).toBe(false);
+      expect(onChange).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  }
+);
+
+test('replacing an item cancels its previous pre-transition', () => {
+  vi.useFakeTimers();
+  try {
+    const { result } = renderTransitionHook({
+      initialProps: { preEnter: true, timeout: 100, onStateChange: onChange }
+    });
+    result.setItem(1);
+    result.toggle();
+    result.setItem(1);
+    onChange.mockClear();
+
+    act(() => vi.runAllTimers());
+
+    expect(result.getStatus()).toBe(STATUS.exited);
+    expect(onChange).not.toHaveBeenCalled();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 test('should toggle state', () => {
   const { result, render } = renderTransitionHook({ initialProps: { onStateChange: onChange } });
   expect(render).toHaveBeenCalledTimes(1);
