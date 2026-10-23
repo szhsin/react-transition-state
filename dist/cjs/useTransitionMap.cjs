@@ -1,7 +1,7 @@
 "use strict";
 const require_internal = require("./internal.cjs");
 let react = require("react");
-//#region src/useTransitionMap.ts
+// src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, ref, config, onChange) => {
 	if (config) {
 		clearTimeout(config.t);
@@ -117,5 +117,4 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		deleteItem
 	};
 };
-//#endregion
 exports.useTransitionMap = useTransitionMap;
