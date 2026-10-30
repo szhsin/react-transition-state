@@ -1,6 +1,6 @@
 import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 import { useCallback, useState } from "react";
-//#region src/useTransitionState.ts
+// src/useTransitionState.ts
 const updateState = (status, setState, ref, onChange) => {
 	clearTimeout(ref.t);
 	cancelAnimationFrame(ref.r);
@@ -59,5 +59,4 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 		endTransition
 	];
 };
-//#endregion
 export { useTransitionState };

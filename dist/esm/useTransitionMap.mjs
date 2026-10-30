@@ -1,6 +1,6 @@
 import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 import { useCallback, useState } from "react";
-//#region src/useTransitionMap.ts
+// src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, ref, config, onChange) => {
 	if (config) {
 		clearTimeout(config.t);
@@ -116,5 +116,4 @@ const useTransitionMap = ({ allowMultiple, enter = true, exit = true, preEnter, 
 		deleteItem
 	};
 };
-//#endregion
 export { useTransitionMap };
