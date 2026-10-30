@@ -30,7 +30,6 @@ const nextTick = (callback, config) => {
 		config.r = requestAnimationFrame(callback);
 	});
 };
-//#endregion
 exports.STATUS = STATUS;
 exports.getEndStatus = getEndStatus;
 exports.getState = getState;
