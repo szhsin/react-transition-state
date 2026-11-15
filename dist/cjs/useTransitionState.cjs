@@ -1,7 +1,7 @@
 "use strict";
 const require_internal = require("./internal.cjs");
 let react = require("react");
-//#region src/useTransitionState.ts
+// src/useTransitionState.ts
 const updateState = (status, setState, ref, onChange) => {
 	clearTimeout(ref.t);
 	cancelAnimationFrame(ref.r);
@@ -60,5 +60,4 @@ const useTransitionState = ({ enter = true, exit = true, preEnter, preExit, time
 		endTransition
 	];
 };
-//#endregion
 exports.useTransitionState = useTransitionState;
