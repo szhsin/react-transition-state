@@ -1,6 +1,6 @@
 "use strict";
-const require_internal = require("./internal.cjs");
 let react = require("react");
+const require_internal = require("./internal.cjs");
 // src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, ref, config, onChange) => {
 	if (config) {

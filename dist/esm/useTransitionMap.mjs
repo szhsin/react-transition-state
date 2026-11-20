@@ -1,5 +1,5 @@
-import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 import { useCallback, useState } from "react";
+import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 // src/useTransitionMap.ts
 const updateState = (key, status, setStateMap, ref, config, onChange) => {
 	if (config) {
