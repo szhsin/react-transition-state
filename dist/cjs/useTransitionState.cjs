@@ -1,6 +1,6 @@
 "use strict";
-const require_internal = require("./internal.cjs");
 let react = require("react");
+const require_internal = require("./internal.cjs");
 // src/useTransitionState.ts
 const updateState = (status, setState, ref, onChange) => {
 	clearTimeout(ref.t);

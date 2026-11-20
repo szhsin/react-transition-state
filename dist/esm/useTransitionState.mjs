@@ -1,5 +1,5 @@
-import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 import { useCallback, useState } from "react";
+import { getEndStatus, getState, getTimeout, nextTick, startOrEnd } from "./internal.mjs";
 // src/useTransitionState.ts
 const updateState = (status, setState, ref, onChange) => {
 	clearTimeout(ref.t);
